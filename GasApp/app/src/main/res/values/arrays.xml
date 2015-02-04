@@ -7,5 +7,16 @@
         <item>20</item>
     </string-array>
 
+    <string-array name="test_stations">
+        <item>Sunoco</item>
+        <item>That Small Place</item>
+        <item>BP</item>
+        <item>Go Mart</item>
+        <item>Go Mart2</item>
+        <item>Go Mart3</item>
+        <item>Go Mart4</item>
+        <item>Go Mart5</item>
+    </string-array>
+
 
 </resources>
