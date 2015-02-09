@@ -1,0 +1,35 @@
+GasApp/.idea/scopes/scope_settings.xml:
+We have named that component “Dependency Validation Manager”. As of right now the purpose of this element is to verify location of the user. 
+GasApp/.idea/inspectionFiles/profiles_setting.xml:
+The duty of this component is to ???????????????????????????????????????????????????????????????????????????? I need help here guys. Not sure what the function is. 
+GasApp/.idea/inspectionProfiles/Project_Default.xml 
+When downloaded and imported as a project in Android studio the user can then open the project file and would see the following.  (Please note these comments are applicable to first version, we will do our best to maintain notes as possible.) 
+ This is a caption of the screen when the general directory is opened in android studio.
+ /////////////////picture is here in the word document cannot be attached here 
+ We will cover pertinent material in the order in which the items appear on the list. 
+Manifests: 
+
+Every application must have an AndroidManifest.xml file (with precisely that name) in its root directory. The manifest file presents essential information about your app to the Android system, information the system must have before it can run any of the app's code. ( developer.android.com ) 
+
+Within our androidManifest.xml we have:
+    <application  – The declaration of the application. This element contains subelements that declare each of the application's components and has attributes that can affect all the components. Many of these attributes (such as icon,label, permission, process, taskAffinity, and allowTaskReparenting) set default values for corresponding attributes of the component elements. Others (such as debuggable, enabled, description, andallowClearUserData) set values for the application as a whole and cannot be overridden by the components. (developer,android.com ) 
+
+Next is  android:allowBackup="true"  -  This determines [whether] to allow the application to participate in the backup and restore infrastructure. If this attribute is set to false, no backup or restore of the application will ever be performed, even by a full-system backup that would otherwise cause all application data to be saved via adb. The default value of this attribute is true.
+
+Then android:icon="@drawable/ic_launcher" -   An icon for the application as whole, and the default icon for each of the application's components. This attribute must be set as a reference to a drawable resource containing the image (for example"@drawable/icon"). There is no default icon. ( developer.android.com ) 
+ 
+ android:label="@string/app_name" - A user-readable label for the application as a whole, and a default label for each of the application's components. The label should be set as a reference to a string resource, so that it can be localized like other strings in the user interface. However, as a convenience while you're developing the application, it can also be set as a raw string.
+
+android:theme="@style/AppTheme" > - A reference to a style resource defining a default theme for all activities in the application. Individual activities can override the default by setting their own theme attributes. For more information, see the Styles and Themes developer guide. ( developer.android.com ) 
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
