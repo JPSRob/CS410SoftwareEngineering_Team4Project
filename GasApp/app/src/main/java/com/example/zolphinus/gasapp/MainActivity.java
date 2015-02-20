@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -56,8 +57,25 @@ public class MainActivity extends ListActivity {
         contactList = new ArrayList<HashMap<String,String>>();
 
         ListView lv = getListView();
+        //new GetContacts().execute();
+    }
+
+    //button click for the Generate Button
+    public void generateClick(View v){
         new GetContacts().execute();
     }
+
+
+    //button click for Create Profile Button
+    public void createProfileClick(View v){
+
+    }
+
+    //button click for Create Profile Button
+    public void loadProfileClick(View v){
+
+    }
+
 
 
     private class GetContacts extends AsyncTask<Void, Void, Void> {

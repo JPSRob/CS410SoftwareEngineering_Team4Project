@@ -139,10 +139,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/vehicleNameTextView"
-                android:background="@android:color/holo_orange_light"
-                android:layout_weight="0.88" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/selectedProfileTextView"
+                android:layout_weight=".88"
+                android:background="@android:color/holo_orange_light" />
 
         </LinearLayout>
 
@@ -202,14 +202,16 @@
                 android:text="@string/createProfileButtonString"
                 android:id="@+id/createProfileButton"
                 android:layout_weight=".35"
-                android:layout_marginRight="@dimen/defaultMargin" />
+                android:layout_marginRight="@dimen/defaultMargin"
+                android:onClick="createProfileClick" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/loadProfileButtonString"
                 android:id="@+id/loadProfileButton"
-                android:layout_weight=".45" />
+                android:layout_weight=".45"
+                android:onClick="loadProfileClick" />
         </LinearLayout>
 
         <LinearLayout
@@ -226,7 +228,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/generateButtonString"
                 android:id="@+id/generateButton"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:onClick="generateClick" />
         </LinearLayout>
 
     </GridLayout>
