@@ -1,7 +1,8 @@
 package com.example.zolphinus.gasapp;
-
+import android.content.Intent;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+//import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
@@ -9,7 +10,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.view.View;
+import android.widget.Button;
+//import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -46,6 +50,8 @@ public class MainActivity extends ListActivity {
     JSONArray contacts = null;
     ArrayList<HashMap<String, String>> contactList;
 
+    public final static String EXTRA_MESSAGE = "com.example.zolphinus.gasapp.MESSAGE";
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,10 +71,11 @@ public class MainActivity extends ListActivity {
         new GetContacts().execute();
     }
 
-
     //button click for Create Profile Button
-    public void createProfileClick(View v){
-
+    public void createProfileClicked(View v){
+        Intent intent = new Intent(this, profileInformationScreen.class);
+        //EditText editText = (EditText) findViewById(R.id.createProfileButton);
+        startActivity(intent);
     }
 
     //button click for Create Profile Button
