@@ -12,7 +12,7 @@ public class profileInformationScreen extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_profile_information_screen);
+        setContentView(R.layout.activity_profile_information_screen);
         Intent intent = getIntent();
     }
 
