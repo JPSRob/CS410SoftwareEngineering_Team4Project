@@ -49,8 +49,6 @@ public class MainActivity extends ListActivity {
 
     JSONArray contacts = null;
     ArrayList<HashMap<String, String>> contactList;
-
-    public final static String EXTRA_MESSAGE = "com.example.zolphinus.gasapp.MESSAGE";
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +70,7 @@ public class MainActivity extends ListActivity {
     }
 
     //button click for Create Profile Button
+    //BORROWED LOGIC AND CODE FROM DEVELOPER.ANDROID.COM
     public void createProfileClicked(View v){
         Intent intent = new Intent(this, profileInformationScreen.class);
         //EditText editText = (EditText) findViewById(R.id.createProfileButton);
@@ -82,8 +81,6 @@ public class MainActivity extends ListActivity {
     public void loadProfileClick(View v){
 
     }
-
-
 
     private class GetContacts extends AsyncTask<Void, Void, Void> {
 
