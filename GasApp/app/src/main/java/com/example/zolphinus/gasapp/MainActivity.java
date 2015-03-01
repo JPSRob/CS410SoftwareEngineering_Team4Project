@@ -1,19 +1,14 @@
 package com.example.zolphinus.gasapp;
-import android.content.Intent;
+
 import android.app.ListActivity;
 import android.app.ProgressDialog;
-//import android.content.Intent;
+import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.StrictMode;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.view.View;
-import android.widget.Button;
-//import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -54,34 +49,31 @@ public class MainActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        StrictMode.ThreadPolicy policy = new StrictMode.
-        ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        contactList = new ArrayList<HashMap<String,String>>();
-
         ListView lv = getListView();
         //new GetContacts().execute();
     }
 
+    //button click for Create Profile Button
+    //BORROWED LOGIC AND CODE FROM DEVELOPER.ANDROID.COM
+    // this will be where we see activity once the button io create a profile is selected
+    public void createProfileClick(View v) {
+        //Intent intent = new Intent(this, profileScreen.class);
+        //Button createProfile = (Button) v;
+        startActivity(new Intent(getApplicationContext(), profileScreen.class));
+    }
+    //this name needs to correspond to the what is seen with the button in the manifest file
+    public void loadProfileClicked(View v)
+    {
+        //Intent intent =  new Intent(this, loadProfile.class);
+        startActivity( new Intent(getApplicationContext(), loadProfile.class));
+        
+    }
+    
     //button click for the Generate Button
     public void generateClick(View v){
         new GetContacts().execute();
     }
-
-    //button click for Create Profile Button
-    //BORROWED LOGIC AND CODE FROM DEVELOPER.ANDROID.COM
-    public void createProfileClicked(View v){
-        Intent intent = new Intent(this, profileInformationScreen.class);
-        //EditText editText = (EditText) findViewById(R.id.createProfileButton);
-        startActivity(intent);
-    }
-
-    //button click for Create Profile Button
-    public void loadProfileClick(View v){
-
-    }
-
+    
     private class GetContacts extends AsyncTask<Void, Void, Void> {
 
         @Override
