@@ -1,26 +1,24 @@
 package com.example.zolphinus.gasapp;
 
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class profileInformationScreen extends ActionBarActivity {
+public class loadProfile extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_information_screen);
-        Intent intent = getIntent();
+        setContentView(R.layout.activity_load_profile);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_profile_information_screen, menu);
+        getMenuInflater().inflate(R.menu.menu_load_profile, menu);
         return true;
     }
 

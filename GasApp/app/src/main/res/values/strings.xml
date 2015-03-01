@@ -16,6 +16,6 @@
     <string name="generateButtonString">Generate Results</string>
     <string name="title_activity_profile_screen">profileScreenActivity</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_profile_information_screen">profileInformationScreen</string>
+    <string name="title_activity_load_profile">loadProfile</string>
 
 </resources>
