@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,6 +26,10 @@ import java.util.HashMap;
 public class MainActivity extends ListActivity {
 
     private ProgressDialog pDialog;
+
+    //Strings for getLatitude and getLongitude methods of GetLocation class
+    private String latitude;
+    private String longitude;
 
     //url to get JSON info
     private static String url = "http://api.androidhive.info/contacts/";
@@ -58,6 +63,11 @@ public class MainActivity extends ListActivity {
 
         ListView lv = getListView();
         //new GetContacts().execute();
+
+        //Instantiate GetLocation object and set latitude/longitude
+        GetLocation myLocation = new GetLocation();
+        latitude = myLocation.getLatitude();
+        longitude = myLocation.getLongitude();
     }
 
     //button click for the Generate Button
