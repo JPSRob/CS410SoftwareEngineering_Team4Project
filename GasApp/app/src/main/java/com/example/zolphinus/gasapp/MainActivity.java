@@ -30,25 +30,60 @@ public class MainActivity extends ListActivity {
 
     private ProgressDialog pDialog;
 
+    private String latitude = "45";
+    private String longitude = "-73";
+
+
     //url to get JSON info
-    private static String url = "http://api.androidhive.info/contacts/";
+    private String url = "http://api.mygasfeed.com/stations/radius/45/-73/30/reg/price/ik3c9jau1p.json?";
+    //private static String url = "http://api.androidhive.info/contacts/";
 
 
 
     //JSON Node labels
-    private static final String TAG_CONTACT = "contacts";
-    private static final String TAG_ID = "id";
-    private static final String TAG_NAME = "name";
-    private static final String TAG_EMAIL = "email";
-    private static final String TAG_ADDRESS = "address";
-    private static final String TAG_GENDER = "gender";
-    private static final String TAG_PHONE = "phone";
-    private static final String TAG_PHONE_MOBILE = "mobile";
-    private static final String TAG_PHONE_HOME = "home";
-    private static final String TAG_PHONE_OFFICE = "office";
+    private static final String TAG_STATUS = "status";
+    private static final String TAG_STATUS_ERROR = "error";
+    private static final String TAG_STATUS_CODE = "code";
+    private static final String TAG_STATUS_DESCRIPTION = "description";
+    private static final String TAG_STATUS_MESSAGE = "message";
+
+    private static final String TAG_GEO = "geoLocation";
+    private static final String TAG_GEO_COUNTRY_SHORT = "country_short";
+    private static final String TAG_GEO_LAT = "lat";
+    private static final String TAG_GEO_LNG = "lng";
+    private static final String TAG_GEO_ADDRESS = "address";
+    private static final String TAG_GEO_CITY_LONG = "city_long";
+    private static final String TAG_GEO_REGION_SHORT = "region_short";
+    private static final String TAG_GEO_REGION_LONG = "region_long";
+    private static final String TAG_GEO_COUNTRY_LONG = "country_long";
+
+
+    private static final String TAG_STATIONS = "stations";
+    private static final String TAG_STATIONS_ZIP = "zip";
+    private static final String TAG_STATIONS_COUNTRY = "country";
+    private static final String TAG_STATIONS_REG_PRICE = "reg_price";
+    private static final String TAG_STATIONS_MID_PRICE = "mid_price";
+    private static final String TAG_STATIONS_PRE_PRICE = "pre_price";
+    private static final String TAG_STATIONS_DIESEL_PRICE = "diesel_price";
+    private static final String TAG_STATIONS_ADDRESS = "address";
+    private static final String TAG_STATIONS_DIESEL = "diesel";
+    private static final String TAG_STATIONS_ID = "id";
+    private static final String TAG_STATIONS_LAT = "lat";
+    private static final String TAG_STATIONS_LNG = "lng";
+    private static final String TAG_STATIONS_STATION = "station";
+    private static final String TAG_STATIONS_REGION = "region";
+    private static final String TAG_STATIONS_CITY = "city";
+    private static final String TAG_STATIONS_REG_DATE = "reg_date";
+    private static final String TAG_STATIONS_MID_DATE = "mid_date";
+    private static final String TAG_STATIONS_PRE_DATE = "pre_date";
+    private static final String TAG_STATIONS_DIESEL_DATE = "diesel_date";
+    private static final String TAG_STATIONS_DISTANCE = "distance";
+
+    JSONArray stations = null;
 
     JSONArray contacts = null;
-    ArrayList<HashMap<String, String>> contactList;
+
+    ArrayList<HashMap<String, String>> stationList;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +93,7 @@ public class MainActivity extends ListActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.
         ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        contactList = new ArrayList<HashMap<String,String>>();
+        stationList = new ArrayList<HashMap<String,String>>();
 
         ListView lv = getListView();
         //new GetContacts().execute();
@@ -103,42 +138,75 @@ public class MainActivity extends ListActivity {
 
             if(jsonStr != null){
                 try{
+                    //grabs a JSON object from the url
                     JSONObject jsonObj = new JSONObject(jsonStr);
 
-                    //grab array node
-                    contacts = jsonObj.getJSONArray(TAG_CONTACT);
+
+                    //grabs the status node from the JSON request
+                    JSONObject status = jsonObj.getJSONObject(TAG_STATUS);
+                    String status_error = status.getString(TAG_STATUS_ERROR);
+                    String status_code = status.getString(TAG_STATUS_CODE);
+                    String status_description = status.getString(TAG_STATUS_DESCRIPTION);
+                    String status_message = status.getString(TAG_STATUS_MESSAGE);
+
+
+                    //grabs the geoLocation node from the JSON request
+
+                    //we may need to check if the JSON call returns an object
+                    JSONObject geoLocation = jsonObj.getJSONObject(TAG_GEO);
+
+                    //and if not, check for a JSON array and skip the normal fields
+
+                    String country_short = geoLocation.getString(TAG_GEO_COUNTRY_SHORT);
+                    String geo_lat = geoLocation.getString(TAG_GEO_LAT);
+                    String geo_lng = geoLocation.getString(TAG_GEO_LNG);
+                    String country_long = geoLocation.getString(TAG_GEO_COUNTRY_LONG);
+                    String region_short = geoLocation.getString(TAG_GEO_REGION_SHORT);
+                    String region_long = geoLocation.getString(TAG_GEO_REGION_LONG);
+                    String city_long = geoLocation.getString(TAG_GEO_CITY_LONG);
+                    String geo_address = geoLocation.getString(TAG_GEO_ADDRESS);
+
+                    stations = jsonObj.getJSONArray(TAG_STATIONS);
 
                     //loop through array
-                    for(int i = 0; i < contacts.length(); i++){
+                    for(int i = 0; i < stations.length(); i++){
                         //grabs first object in array
-                        JSONObject c = contacts.getJSONObject(i);
+                        JSONObject c = stations.getJSONObject(i);
 
                         //grab object fields and assign to strings
 
-                        String id = c.getString(TAG_ID);
-                        String name = c.getString(TAG_NAME);
-                        String email = c.getString(TAG_EMAIL);
-                        String address = c.getString(TAG_ADDRESS);
-                        String gender = c.getString(TAG_GENDER);
+                        String country = c.getString(TAG_STATIONS_COUNTRY);
+                        String zip = c.getString(TAG_STATIONS_ZIP);
+                        String reg_price = c.getString(TAG_STATIONS_REG_PRICE);
+                        String mid_price = c.getString(TAG_STATIONS_MID_PRICE);
+                        String pre_price = c.getString(TAG_STATIONS_PRE_PRICE);
+                        String diesel_price = c.getString(TAG_STATIONS_DIESEL_PRICE);
+                        String reg_date = c.getString(TAG_STATIONS_REG_DATE);
+                        String mid_date = c.getString(TAG_STATIONS_MID_DATE);
+                        String pre_date = c.getString(TAG_STATIONS_PRE_DATE);
+                        String diesel_date = c.getString(TAG_STATIONS_DIESEL_DATE);
+                        String address = c.getString(TAG_STATIONS_ADDRESS);
+                        String diesel = c.getString(TAG_STATIONS_DIESEL);
+                        String station_id = c.getString(TAG_STATIONS_ID);
+                        String lat = c.getString(TAG_STATIONS_LAT);
+                        String lng = c.getString(TAG_STATIONS_LNG);
+                        String station = c.getString(TAG_STATIONS_STATION);
+                        String region = c.getString(TAG_STATIONS_REGION);
+                        String city = c.getString(TAG_STATIONS_CITY);
+                        String distance = c.getString(TAG_STATIONS_DISTANCE);
 
-                        //grab JSON node from within the current JSON object
-
-                        JSONObject phone = c.getJSONObject(TAG_PHONE);
-                        String mobile = phone.getString(TAG_PHONE_MOBILE);
-                        String home = phone.getString(TAG_PHONE_HOME);
-                        String office = phone.getString(TAG_PHONE_OFFICE);
 
                         //create temporary hash map for single entry
-                        HashMap<String, String> contact = new HashMap<String, String>();
+                        HashMap<String, String> station_map = new HashMap<String, String>();
 
                         //adds child nodes into HashMap   key/value
-                        contact.put(TAG_ID, id);
-                        contact.put(TAG_NAME, name);
-                        contact.put(TAG_EMAIL, email);
-                        contact.put(TAG_PHONE_MOBILE, mobile);
+                        station_map.put(TAG_STATIONS_STATION, station);
+                        station_map.put(TAG_STATIONS_REG_PRICE, reg_price);
+                        station_map.put(TAG_STATIONS_ADDRESS, address);
+                        station_map.put(TAG_STATIONS_DISTANCE, distance);
 
                         //then add to the entry list
-                        contactList.add(contact);
+                        stationList.add(station_map);
                     }
 
                 } catch (JSONException e){
@@ -165,9 +233,9 @@ public class MainActivity extends ListActivity {
             //Update JSON into ListView
 
             ListAdapter adapter = new SimpleAdapter(
-                    MainActivity.this, contactList,
-                    R.layout.list_item, new String[] {TAG_NAME, TAG_EMAIL,
-                    TAG_PHONE_MOBILE }, new int[] {R.id.name,
+                    MainActivity.this, stationList,
+                    R.layout.list_item, new String[] {TAG_STATIONS_STATION, TAG_STATIONS_ADDRESS,
+                    TAG_STATIONS_DISTANCE }, new int[] {R.id.name,
                     R.id.email, R.id.mobile });
 
             setListAdapter(adapter);
