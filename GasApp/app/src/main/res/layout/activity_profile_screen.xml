@@ -17,15 +17,21 @@
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Profile name "
+            android:text="Profile Information"
             android:id="@+id/textView"
             android:layout_gravity="center_horizontal"
             android:textStyle="bold"
             android:textColor="#ff040404"
             android:background="#ffffbb33"
-            android:textSize="45dp"
-            android:textAlignment="center"
-            android:gravity="center_horizontal" />
+            android:textSize="33sp"
+            android:gravity="center_vertical|center_horizontal"
+            android:singleLine="true" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="449dp"
+            android:layout_gravity="bottom"></LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>
