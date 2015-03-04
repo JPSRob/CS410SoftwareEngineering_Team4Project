@@ -30,8 +30,64 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="449dp"
-            android:layout_gravity="bottom"></LinearLayout>
+            android:layout_height="369dp"
+            android:layout_gravity="bottom"
+            android:weightSum="1"
+            android:layout_weight="3.36">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile Name "
+                android:id="@+id/textView3"
+                android:textColor="#ff030303"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="Your Profile Name "
+                android:ems="10"
+                android:id="@+id/editText"
+                android:textStyle="italic"
+                android:background="@color/common_action_bar_splitter"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Vehicle MPG"
+                android:id="@+id/textView4"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                android:textColor="#fd0a0a0a" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/editText2"
+                android:background="@color/common_action_bar_splitter"
+                android:textStyle="italic"
+                android:textSize="22sp"
+                android:text="Your MPG" />
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:id="@+id/button"
+            android:textSize="33sp"
+            android:padding="12dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.21" />
+
     </LinearLayout>
 
 </RelativeLayout>
