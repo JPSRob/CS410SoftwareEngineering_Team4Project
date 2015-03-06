@@ -1,9 +1,10 @@
 package com.example.zolphinus.gasapp;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class loadProfile extends ActionBarActivity {
@@ -13,14 +14,14 @@ public class loadProfile extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load_profile);
     }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_load_profile, menu);
-        return true;
+    
+    public void loadProfileSelected(View v){
+        startActivity(new Intent(getApplicationContext(), MainActivity.class
+        ));
+        setContentView(R.layout.activity_main);
+        
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
