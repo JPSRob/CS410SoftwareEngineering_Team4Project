@@ -55,15 +55,14 @@ public class MainActivity extends ListActivity {
 
     //button click for Create Profile Button
     //BORROWED LOGIC AND CODE FROM DEVELOPER.ANDROID.COM
-    // this will be where we see activity once the button io create a profile is selected
+
     public void createProfileClick(View v) {
         //Intent intent = new Intent(this, profileScreen.class);
         //Button createProfile = (Button) v;
         startActivity(new Intent(getApplicationContext(), profileScreen.class));
     }
     //this name needs to correspond to the what is seen with the button in the manifest file
-    public void loadProfileClicked(View v)
-    {
+    public void loadProfileClick(View v){
         //Intent intent =  new Intent(this, loadProfile.class);
         startActivity( new Intent(getApplicationContext(), loadProfile.class));
         

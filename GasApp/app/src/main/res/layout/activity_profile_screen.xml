@@ -48,12 +48,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:text="Your Profile Name "
                 android:ems="10"
                 android:id="@+id/editText"
                 android:textStyle="italic"
                 android:background="@color/common_action_bar_splitter"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+                android:contentDescription="Your Profile Name "
+                android:editable="true"
+                android:hint="Your Profile Name" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -74,7 +76,7 @@
                 android:background="@color/common_action_bar_splitter"
                 android:textStyle="italic"
                 android:textSize="22sp"
-                android:text="Your MPG" />
+                android:hint="Your MPG" />
 
         </LinearLayout>
 

@@ -210,9 +210,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/loadProfileButtonString"
-                android:id="@+id/loadProfileButton"
+                android:id="@+id/loadProfileClick"
                 android:layout_weight=".45"
-                android:onClick="loadProfileClicked" />
+                android:onClick="loadProfileClick" />
         </LinearLayout>
 
         <LinearLayout

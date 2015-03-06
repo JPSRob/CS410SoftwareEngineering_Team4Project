@@ -1,5 +1,6 @@
 package com.example.zolphinus.gasapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
@@ -14,17 +15,14 @@ public class profileScreen extends ActionBarActivity {
         setContentView(R.layout.activity_profile_screen);
         //Intent intent = getIntent();
     }
+
     public void saveProfile(View v){
+        startActivity(new Intent(getApplicationContext(), MainActivity.class
+        ));
         setContentView(R.layout.activity_main);
     }
 
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_profile_screen, menu);
-        return true;
-    }
-*/
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
