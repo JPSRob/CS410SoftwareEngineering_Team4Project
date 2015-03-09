@@ -24,7 +24,7 @@ import android.widget.Toast;
  * Created by Justin Roberts on 3/1/2015.
  * References: https://developer.android.com/training/location/retrieve-current.html
  */
-public class GetLocation extends ActionBarActivity implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
+public class GetLocation extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     //Variables
     protected GoogleApiClient mGoogleApiClient; //Our instance of the GoogleApiClient
@@ -37,13 +37,16 @@ public class GetLocation extends ActionBarActivity implements GooglePlayServices
      * thereby building the LocationServices API to be used in the class.
      */
     public GetLocation(){
-        protected synchronized void buildGoogleApiClient() {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
+        buildGoogleApiClient();
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+
+                .build();
     }
 
     //onConnected callback provided by our GoogleApiClient, which is called when client is ready.
@@ -57,8 +60,8 @@ public class GetLocation extends ActionBarActivity implements GooglePlayServices
     }
 
     @Override
-    public void onDisconnected() {
-        
+    public void onConnectionSuspended(int i) {
+
     }
 
 

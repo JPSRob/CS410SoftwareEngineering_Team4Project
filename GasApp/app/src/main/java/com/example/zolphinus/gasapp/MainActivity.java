@@ -14,6 +14,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,13 +29,12 @@ public class MainActivity extends ListActivity {
     private ProgressDialog pDialog;
 
     //Strings for getLatitude and getLongitude methods of GetLocation class
-    private String latitude;
-    private String longitude;
 
     //url to get JSON info
-    private static String url = "http://api.androidhive.info/contacts/";
+    private  static String url = "http://api.androidhive.info/contacts/";
 
-
+    //GPS Class
+    GPSTracker gps;
 
     //JSON Node labels
     private static final String TAG_CONTACT = "contacts";
@@ -53,10 +53,19 @@ public class MainActivity extends ListActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //String latitude;
+        //String longitude;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        StrictMode.ThreadPolicy policy = new StrictMode.
+        gps = new GPSTracker(MainActivity.this);
+
+
+
+
+
+
+            StrictMode.ThreadPolicy policy = new StrictMode.
         ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         contactList = new ArrayList<HashMap<String,String>>();
@@ -64,14 +73,45 @@ public class MainActivity extends ListActivity {
         ListView lv = getListView();
         //new GetContacts().execute();
 
+        if(gps.canGetLocation()){
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+            // \n is for new line
+            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(getApplicationContext(), "Couldn't load",Toast.LENGTH_LONG).show();
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gps.showSettingsAlert();
+        }
+
         //Instantiate GetLocation object and set latitude/longitude
+
+/*
         GetLocation myLocation = new GetLocation();
         latitude = myLocation.getLatitude();
         longitude = myLocation.getLongitude();
+        */
+
+        //build the final URL string here
     }
 
     //button click for the Generate Button
     public void generateClick(View v){
+        if(gps.canGetLocation()){
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+            // \n is for new line
+            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(getApplicationContext(), "Couldn't load",Toast.LENGTH_LONG).show();
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gps.showSettingsAlert();
+        }
+
         new GetContacts().execute();
     }
 
@@ -101,6 +141,8 @@ public class MainActivity extends ListActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
+            //url to get JSON info
+            String url = "http://api.androidhive.info/contacts/";
             ServiceHandler sh = new ServiceHandler();
 
             String jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
