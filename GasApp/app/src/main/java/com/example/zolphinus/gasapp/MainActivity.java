@@ -24,21 +24,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
+
 public class MainActivity extends ListActivity {
 
     private ProgressDialog pDialog;
 
+    double latitude = 0.0;
+    double longitude = 0.0;
+    int radius = 5;
+
 
     //url to get JSON info
-    private String url = "http://api.mygasfeed.com/stations/radius/45/-73/30/reg/price/ik3c9jau1p.json?";
+    private String firstPart = "http://api.mygasfeed.com/stations/radius/";
+    private String secondPart = "/reg/price/ik3c9jau1p.json?";
+
     //private static String url = "http://api.androidhive.info/contacts/";
 
 
-    //url to get JSON info
-    private  static String url = "http://api.androidhive.info/contacts/";
 
     //GPS Class
-    GPSTracker gps;
+    private GPSTracker gps;
 
     //JSON Node labels
     private static final String TAG_STATUS = "status";
@@ -92,19 +97,17 @@ public class MainActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        StrictMode.ThreadPolicy policy = new StrictMode.
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
         gps = new GPSTracker(MainActivity.this);
-
-        ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         stationList = new ArrayList<HashMap<String,String>>();
         ListView lv = getListView();
         //new GetContacts().execute();
 
         if(gps.canGetLocation()){
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
+             latitude = gps.getLatitude();
+             longitude = gps.getLongitude();
             // \n is for new line
             Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
         }else {
@@ -144,8 +147,8 @@ public class MainActivity extends ListActivity {
     //button click for the Generate Button
     public void generateClick(View v){
 	if(gps.canGetLocation()){
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
+            latitude = gps.getLatitude();
+            longitude = gps.getLongitude();
             // \n is for new line
             Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
         }else {
@@ -171,8 +174,13 @@ public class MainActivity extends ListActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            //url to get JSON info
-            String url = "http://api.androidhive.info/contacts/";
+           //url to get JSON info
+            String latStr = String.valueOf(latitude);
+            String lngStr = String.valueOf(longitude);
+
+            String url = firstPart + latStr + '/' + lngStr + '/' + radius + secondPart;
+
+
             ServiceHandler sh = new ServiceHandler();
 
             String jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
