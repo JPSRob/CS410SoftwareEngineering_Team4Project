@@ -17,9 +17,10 @@ public class profileScreen extends ActionBarActivity {
     }
 
     public void saveProfile(View v){
-        startActivity(new Intent(getApplicationContext(), MainActivity.class
-        ));
+        //startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
         setContentView(R.layout.activity_main);
+        this.finish();
     }
 
 

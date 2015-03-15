@@ -16,9 +16,9 @@ public class loadProfile extends ActionBarActivity {
     }
     
     public void loadProfileSelected(View v){
-        startActivity(new Intent(getApplicationContext(), MainActivity.class
-        ));
+
         setContentView(R.layout.activity_main);
+        this.finish();
         
     }
 

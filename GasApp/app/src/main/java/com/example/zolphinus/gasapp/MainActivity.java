@@ -10,9 +10,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +23,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-
+import java.util.Map;
 
 
 public class MainActivity extends ListActivity {
@@ -31,7 +34,8 @@ public class MainActivity extends ListActivity {
 
     double latitude = 0.0;
     double longitude = 0.0;
-    int radius = 5;
+
+
 
 
     //url to get JSON info
@@ -84,11 +88,22 @@ public class MainActivity extends ListActivity {
     private static final String TAG_STATIONS_DIESEL_DATE = "diesel_date";
     private static final String TAG_STATIONS_DISTANCE = "distance";
 
+    String sortKey = TAG_STATIONS_REG_PRICE;
+    String priceKey = TAG_STATIONS_REG_PRICE;
+
     JSONArray stations = null;
 
     JSONArray contacts = null;
 
-    ArrayList<HashMap<String, String>> stationList;
+    class Test{
+
+    }
+
+    ArrayList<Map<String, String>> stationList;
+    ArrayList<Test> testList;
+
+
+
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +116,7 @@ public class MainActivity extends ListActivity {
 
         gps = new GPSTracker(MainActivity.this);
         StrictMode.setThreadPolicy(policy);
-        stationList = new ArrayList<HashMap<String,String>>();
+        stationList = new ArrayList<Map<String,String>>();
         ListView lv = getListView();
         //new GetContacts().execute();
 
@@ -150,14 +165,15 @@ public class MainActivity extends ListActivity {
             latitude = gps.getLatitude();
             longitude = gps.getLongitude();
             // \n is for new line
-            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
         }else {
-            Toast.makeText(getApplicationContext(), "Couldn't load",Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "Couldn't load",Toast.LENGTH_LONG).show();
             // can't get location
             // GPS or Network is not enabled
             // Ask user to enable GPS/network in settings
             gps.showSettingsAlert();
         }
+
         new GetContacts().execute();
     }
     
@@ -174,12 +190,37 @@ public class MainActivity extends ListActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-           //url to get JSON info
+           //build url to get JSON info
+            Spinner radiusSpinner = (Spinner) findViewById(R.id.radiusDropSpinner);
+            Spinner fuelSpinner = (Spinner) findViewById(R.id.fuelDropSpinner);
+
+            String fuelType = fuelSpinner.getSelectedItem().toString();
+
+            if(fuelType.equals("Regular")){
+                fuelType = "/reg";
+                priceKey = TAG_STATIONS_REG_PRICE;
+            }
+            if(fuelType.equals("Mid")){
+                fuelType = "/mid";
+                priceKey = TAG_STATIONS_MID_PRICE;
+            }
+            if(fuelType.equals("Supreme")){
+                fuelType = "/pre";
+                priceKey = TAG_STATIONS_PRE_PRICE;
+            }
+            if(fuelType.equals("Diesel")){
+                fuelType = "/diesel";
+                priceKey = TAG_STATIONS_DIESEL_PRICE;
+            }
+
+
             String latStr = String.valueOf(latitude);
             String lngStr = String.valueOf(longitude);
+            String radius = radiusSpinner.getSelectedItem().toString();
+            String url = firstPart + latStr + '/' + lngStr + '/' + radius + secondPart; //+ fuelType + secondPart;
 
-            String url = firstPart + latStr + '/' + lngStr + '/' + radius + secondPart;
-
+            //erases old data to avoid populating a list multiple times
+            stationList.clear();
 
             ServiceHandler sh = new ServiceHandler();
 
@@ -247,18 +288,25 @@ public class MainActivity extends ListActivity {
                         String distance = c.getString(TAG_STATIONS_DISTANCE);
 
 
-                        //create temporary hash map for single entry
-                        HashMap<String, String> station_map = new HashMap<String, String>();
+                        //create temporary  map for single entry
+                        Map<String, String> station_map = new HashMap<String, String>();
+
+                        //create new Station object and store the values in it
+
 
                         //adds child nodes into HashMap   key/value
                         station_map.put(TAG_STATIONS_STATION, station);
                         station_map.put(TAG_STATIONS_REG_PRICE, reg_price);
                         station_map.put(TAG_STATIONS_ADDRESS, address);
                         station_map.put(TAG_STATIONS_DISTANCE, distance);
+                        station_map.put(TAG_STATIONS_MID_PRICE, mid_price);
+                        station_map.put(TAG_STATIONS_PRE_PRICE, pre_price);
+                        station_map.put(TAG_STATIONS_DIESEL_PRICE, diesel_price);
 
                         //then add to the entry list
                         stationList.add(station_map);
                     }
+                    Collections.sort(stationList, new ListMapComparator(sortKey));
 
                 } catch (JSONException e){
                     e.printStackTrace();
@@ -282,12 +330,11 @@ public class MainActivity extends ListActivity {
 
 
             //Update JSON into ListView
-
-            ListAdapter adapter = new SimpleAdapter(
+                  ListAdapter adapter = new SimpleAdapter(
                     MainActivity.this, stationList,
                     R.layout.list_item, new String[] {TAG_STATIONS_STATION, TAG_STATIONS_ADDRESS,
-                    TAG_STATIONS_DISTANCE }, new int[] {R.id.name,
-                    R.id.email, R.id.mobile });
+                    TAG_STATIONS_DISTANCE, priceKey }, new int[] {R.id.name,
+                    R.id.email, R.id.mobile, R.id.price});
 
             setListAdapter(adapter);
 
