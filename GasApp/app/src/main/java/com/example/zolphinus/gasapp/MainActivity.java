@@ -95,12 +95,9 @@ public class MainActivity extends ListActivity {
 
     JSONArray contacts = null;
 
-    class Test{
 
-    }
 
     ArrayList<Map<String, String>> stationList;
-    ArrayList<Test> testList;
 
 
 

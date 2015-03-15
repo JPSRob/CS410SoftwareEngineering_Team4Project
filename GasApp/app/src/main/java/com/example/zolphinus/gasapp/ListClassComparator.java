@@ -4,7 +4,9 @@ import java.util.Comparator;
 import java.util.Map;
 
 /**
- * Created by zolphinus on 3/14/2015.
+ * Created by blong824 on StackOverflow
+ * @
+ * http://stackoverflow.com/questions/5155952/sorting-a-list-of-mapstring-string
  */
 class ListMapComparator implements Comparator {
 
