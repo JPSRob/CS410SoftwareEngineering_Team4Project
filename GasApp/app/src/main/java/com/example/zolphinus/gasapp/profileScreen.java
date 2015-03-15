@@ -1,6 +1,5 @@
 package com.example.zolphinus.gasapp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
@@ -15,13 +14,32 @@ public class profileScreen extends ActionBarActivity {
         setContentView(R.layout.activity_profile_screen);
         //Intent intent = getIntent();
     }
-
     public void saveProfile(View v){
-        startActivity(new Intent(getApplicationContext(), MainActivity.class
-        ));
+        //startActivity(new Intent(getApplicationContext(), MainActivity.class
+        //));
         setContentView(R.layout.activity_main);
     }
 
+    /*  public void onClick(View v){
+        try{
+            FileInputStream fis = openFileInput("text.txt");
+            InputStreamReader isr = new InputStreamReader(fis)
+        }catch ( FileNotFoundException e){
+            e.printStackTrace();
+        }
+        
+    }*/
+    //profileName = findViewById(R.id.textView2)
+
+    
+    
+   // public abstract SharedPreferences.Editor edit(){
+
+        
+    //}
+    
+    
+  
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

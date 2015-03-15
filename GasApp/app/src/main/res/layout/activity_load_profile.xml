@@ -9,8 +9,8 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Choose Vehicle Profile "
-        android:id="@+id/textView2"
+            android:text="Choose Vehicle Profile "
+            android:id="@+id/textView2"
         android:layout_centerHorizontal="true"
         android:textColor="#ff070707"
         android:textSize="33sp"
@@ -22,8 +22,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ok"
-        android:id="@+id/button"
+            android:text="Load"
+            android:id="@+id/Load"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:onClick="loadProfileSelected" />

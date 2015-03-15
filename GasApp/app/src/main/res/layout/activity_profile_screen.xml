@@ -55,7 +55,8 @@
                 android:textSize="22sp"
                 android:contentDescription="Your Profile Name "
                 android:editable="true"
-                android:hint="Your Profile Name" />
+                android:hint="Your Profile Name"
+                android:saveEnabled="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -76,7 +77,8 @@
                 android:background="@color/common_action_bar_splitter"
                 android:textStyle="italic"
                 android:textSize="22sp"
-                android:hint="Your MPG" />
+                android:hint="Your MPG"
+                android:saveEnabled="true" />
 
         </LinearLayout>
 
@@ -89,7 +91,9 @@
             android:padding="12dp"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.21"
-            android:onClick="saveProfile" />
+            android:onClick="saveProfile"
+            android:clickable="true"
+            android:saveEnabled="true" />
 
     </LinearLayout>
 

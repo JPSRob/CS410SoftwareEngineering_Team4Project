@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import org.json.JSONArray;
@@ -45,29 +44,31 @@ public class MainActivity extends ListActivity {
     JSONArray contacts = null;
     ArrayList<HashMap<String, String>> contactList;
     
+    public static final String VEHICLE_NAME = "MyPrefsFile";
+    
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ListView lv = getListView();
-        //new GetContacts().execute();
     }
 
     //button click for Create Profile Button
     //BORROWED LOGIC AND CODE FROM DEVELOPER.ANDROID.COM
 
     public void createProfileClick(View v) {
-        //Intent intent = new Intent(this, profileScreen.class);
-        //Button createProfile = (Button) v;
         startActivity(new Intent(getApplicationContext(), profileScreen.class));
     }
+    
+
     //this name needs to correspond to the what is seen with the button in the manifest file
     public void loadProfileClick(View v){
         //Intent intent =  new Intent(this, loadProfile.class);
-        startActivity( new Intent(getApplicationContext(), loadProfile.class));
+        startActivity(new Intent(getApplicationContext(), loadProfile.class));
         
     }
-    
+  
+
     //button click for the Generate Button
     public void generateClick(View v){
         new GetContacts().execute();
@@ -165,7 +166,39 @@ public class MainActivity extends ListActivity {
 
         }
     }
+    
+    //**************                                *****************///
+    //**************** credit to stackoverflow for references************///
+    
+    //This is the means through which we will pass around the user info
+    public class profileInformation{
+        private String profileName;
+        private int Mpg; 
+        
+        //constructor
+        public profileInformation(String profileName, int Mpg){
+            this.profileName = profileName;
+            this.Mpg = Mpg;             
+        }
+        
+        //Setter for profile name and MPG
+        public void setProfileName(String profileName){this.profileName = profileName;}
+        public void setMpg(int Mpg){this.Mpg = Mpg;}
+        
+        //getters for info in profile 
+        public String getProfileName(){return profileName;}
+        public int getMpg() {return Mpg;}
 
+
+        /***************************************
+         *    Code for future use of multiple profiles.
+         *
+         *      profileInformation[]arr = new profileInformation[100]; // array of profiles 
+         *      profileInfo[0] = new profileInformation("//get from interface", mpg); //creates and profile object
+         *      profileInfo[1] = new profileInformation("//get from interface", mpg); //creates another user profile
+         *
+         * * * * * * * * * */
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
