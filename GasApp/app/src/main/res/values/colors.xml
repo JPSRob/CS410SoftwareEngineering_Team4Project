@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="MainBackground">#87cefa</color>
+    <color name="ListEntryColor">#b7e1fc</color>
+    <color name="ButtonColor">#FFB347</color>
+    <color name="SecondaryBackgroundColor">#9fd7fb</color>
+    <color name="ListHeader">#FF1C00</color>
+    <color name="ListFields">#008080</color>
+</resources>

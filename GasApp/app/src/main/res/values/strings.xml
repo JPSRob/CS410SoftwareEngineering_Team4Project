@@ -10,7 +10,7 @@
     <string name="priceCheckBoxString">Price</string>
     <string name="vehicleLabelString">Vehicle Profile:</string>
     <string name="dataLabelString">Data</string>
-    <string name="stationNamesLabel">Station Names</string>
+    <string name="stationNamesLabel">Station Info</string>
     <string name="createProfileButtonString">Create Profile</string>
     <string name="loadProfileButtonString">Load Profile</string>
     <string name="generateButtonString">Generate Results</string>

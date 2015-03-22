@@ -5,12 +5,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -41,6 +41,11 @@ public class MainActivity extends ListActivity {
     //url to get JSON info
     private String firstPart = "http://api.mygasfeed.com/stations/radius/";
     private String secondPart = "/reg/price/ik3c9jau1p.json?";
+
+    private String testError = "TEST";
+    private Boolean JSONFail = false;
+    private int numTries;
+
 
     //private static String url = "http://api.androidhive.info/contacts/";
 
@@ -171,8 +176,24 @@ public class MainActivity extends ListActivity {
             gps.showSettingsAlert();
         }
 
+        numTries = 0;
+        JSONFail = false;
+
         new GetContacts().execute();
+        final TextView textViewToChange = (TextView) findViewById(R.id.vehicleTextView);
+        textViewToChange.setText(testError);
     }
+
+    private Runnable jsonRunnable = new Runnable()
+    {
+        @Override
+        public void run()
+        {
+            testError = "run";
+            new GetContacts().execute();
+        }
+    };
+
     
     private class GetContacts extends AsyncTask<Void, Void, Void> {
 
@@ -183,6 +204,7 @@ public class MainActivity extends ListActivity {
             pDialog.setMessage("Please wait...");
             pDialog.setCancelable(false);
             //pDialog.show();
+
         }
 
         @Override
@@ -217,7 +239,7 @@ public class MainActivity extends ListActivity {
             String url = firstPart + latStr + '/' + lngStr + '/' + radius + secondPart; //+ fuelType + secondPart;
 
             //erases old data to avoid populating a list multiple times
-            stationList.clear();
+
 
             ServiceHandler sh = new ServiceHandler();
 
@@ -225,10 +247,12 @@ public class MainActivity extends ListActivity {
 
             Log.d("Reponse: ", "> " + jsonStr);
 
+
             if(jsonStr != null){
                 try{
                     //grabs a JSON object from the url
                     JSONObject jsonObj = new JSONObject(jsonStr);
+                    stationList.clear();
 
 
                     //grabs the status node from the JSON request
@@ -237,6 +261,14 @@ public class MainActivity extends ListActivity {
                     String status_code = status.getString(TAG_STATUS_CODE);
                     String status_description = status.getString(TAG_STATUS_DESCRIPTION);
                     String status_message = status.getString(TAG_STATUS_MESSAGE);
+
+                    /*
+                    if(status_error != null){
+                        testError = status_error;
+                    }else{
+                        testError = "NULL";
+                    }
+                    */
 
 
                     //grabs the geoLocation node from the JSON request
@@ -257,10 +289,17 @@ public class MainActivity extends ListActivity {
 
                     stations = jsonObj.getJSONArray(TAG_STATIONS);
 
+
+                    testError = "BEFORE";
+
+
                     //loop through array
                     for(int i = 0; i < stations.length(); i++){
                         //grabs first object in array
                         JSONObject c = stations.getJSONObject(i);
+
+                        testError = "DURING";
+
 
                         //grab object fields and assign to strings
 
@@ -304,12 +343,15 @@ public class MainActivity extends ListActivity {
                         stationList.add(station_map);
                     }
                     Collections.sort(stationList, new ListMapComparator(sortKey));
-
+                    JSONFail = false;
                 } catch (JSONException e){
                     e.printStackTrace();
+                    testError = "JSON";
+                    JSONFail = true;
                 }
             } else {
                 Log.e("ServiceHandler", "Couldn't get any data from the url");
+
             }
 
             return null;
@@ -318,12 +360,27 @@ public class MainActivity extends ListActivity {
         @Override
         protected void onPostExecute(Void result){
             super.onPostExecute(result);
+            numTries++;
+            final Handler handler = new Handler();
+            if(JSONFail == true && numTries < 3){
+                handler.postDelayed(jsonRunnable, 4000);
+            }
+
+
+
+            if(numTries == 3){
+                //error flag for error message goes here
+                testError = "3 Fails";
+            }
+
             //cleanup progress dialog
             if(pDialog != null){
                 if(pDialog.isShowing())
                     pDialog.dismiss();
                 pDialog = null;
             }
+
+            setListAdapter(null);
 
 
             //Update JSON into ListView
@@ -332,6 +389,7 @@ public class MainActivity extends ListActivity {
                     R.layout.list_item, new String[] {TAG_STATIONS_STATION, TAG_STATIONS_ADDRESS,
                     TAG_STATIONS_DISTANCE, priceKey }, new int[] {R.id.name,
                     R.id.email, R.id.mobile, R.id.price});
+
 
             setListAdapter(adapter);
 

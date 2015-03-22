@@ -7,39 +7,53 @@
     android:paddingLeft = "10dp"
     android:paddingRight = "10dp">
 
-    //labels
 
-    <TextView
-        android:id="@+id/name"
+    <GridLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="2dip"
-        android:paddingTop="6dip"
-        android:textColor="#43bd00"
-        android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:layout_height="fill_parent"
+        android:background="@color/ListEntryColor">
 
-    <TextView
-        android:id="@+id/email"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="2dip"
-        android:textColor="#acacac"/>
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="2dip"
+            android:paddingTop="6dip"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:text="test"
+            android:textColor="@color/ListHeader" />
 
-    <TextView
-        android:id="@+id/mobile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:text="Mobile"
-        android:textColor="#5d5d5d"
-        android:textStyle=""/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/email"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:text="test"
+            android:textColor="@color/ListFields" />
 
-    <TextView
-        android:id="@+id/price"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="2dip"
-        android:textColor="#acacac"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/mobile"
+            android:layout_row="2"
+            android:layout_column="0"
+            android:text="test"
+            android:textColor="@color/ListFields" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/price"
+            android:layout_row="3"
+            android:layout_column="0"
+            android:text="test"
+            android:textColor="@color/ListFields" />
+    </GridLayout>
 </LinearLayout>
