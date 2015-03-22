@@ -53,7 +53,8 @@
                     android:layout_column="0"
                     android:background="@color/ButtonColor"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="@dimen/defaultMargin" />
+                    android:layout_marginRight="@dimen/defaultMargin"
+                    android:enabled="true" />
 
             </LinearLayout>
 
@@ -221,7 +222,8 @@
                     android:id="@+id/priceRadioButton"
                     android:layout_weight="1"
                     android:layout_gravity="center_vertical"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:checked="true" />
 
                 <RadioButton
                     android:layout_width="wrap_content"
