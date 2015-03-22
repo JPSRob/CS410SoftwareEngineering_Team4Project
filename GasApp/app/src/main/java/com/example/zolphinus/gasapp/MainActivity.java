@@ -7,12 +7,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -34,6 +37,7 @@ public class MainActivity extends ListActivity {
 
     double latitude = 0.0;
     double longitude = 0.0;
+    double mpgValue = 0.0;
 
 
 
@@ -92,15 +96,14 @@ public class MainActivity extends ListActivity {
     private static final String TAG_STATIONS_PRE_DATE = "pre_date";
     private static final String TAG_STATIONS_DIESEL_DATE = "diesel_date";
     private static final String TAG_STATIONS_DISTANCE = "distance";
+    private static final String TAG_VALUE = "value";
 
+    //By default, sorting starts with Regular Gas prices
     String sortKey = TAG_STATIONS_REG_PRICE;
     String priceKey = TAG_STATIONS_REG_PRICE;
 
+
     JSONArray stations = null;
-
-    JSONArray contacts = null;
-
-
 
     ArrayList<Map<String, String>> stationList;
 
@@ -120,33 +123,9 @@ public class MainActivity extends ListActivity {
         StrictMode.setThreadPolicy(policy);
         stationList = new ArrayList<Map<String,String>>();
         ListView lv = getListView();
-        //new GetContacts().execute();
-
-        if(gps.canGetLocation()){
-             latitude = gps.getLatitude();
-             longitude = gps.getLongitude();
-            // \n is for new line
-            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-        }else {
-            Toast.makeText(getApplicationContext(), "Couldn't load",Toast.LENGTH_LONG).show();
-            // can't get location
-            // GPS or Network is not enabled
-            // Ask user to enable GPS/network in settings
-            gps.showSettingsAlert();
-        }
-
-        //Instantiate GetLocation object and set latitude/longitude
-
-/*
-        GetLocation myLocation = new GetLocation();
-        latitude = myLocation.getLatitude();
-        longitude = myLocation.getLongitude();
-        */
-
-        //build the final URL string here
     }
 
-    //button click for Create Profile Button
+    //button click for Create and Load Profile Buttons
     //BORROWED LOGIC AND CODE FROM DEVELOPER.ANDROID.COM
 
     public void createProfileClick(View v) {
@@ -163,25 +142,14 @@ public class MainActivity extends ListActivity {
     
     //button click for the Generate Button
     public void generateClick(View v){
-	if(gps.canGetLocation()){
-            latitude = gps.getLatitude();
-            longitude = gps.getLongitude();
-            // \n is for new line
-            //Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-        }else {
-            //Toast.makeText(getApplicationContext(), "Couldn't load",Toast.LENGTH_LONG).show();
-            // can't get location
-            // GPS or Network is not enabled
-            // Ask user to enable GPS/network in settings
-            gps.showSettingsAlert();
-        }
+    //test for empty MPG edit text
+    EditText editText = (EditText) findViewById(R.id.mpgEditText);
+    if( TextUtils.isEmpty(editText.getText())){
+        Toast.makeText(getApplicationContext(), "Please enter MPG.", Toast.LENGTH_LONG).show();
+    }else {
 
-        numTries = 0;
-        JSONFail = false;
-
-        new GetContacts().execute();
-        final TextView textViewToChange = (TextView) findViewById(R.id.vehicleTextView);
-        textViewToChange.setText(testError);
+        makeJSONCall();
+    }
     }
 
     private Runnable jsonRunnable = new Runnable()
@@ -189,7 +157,6 @@ public class MainActivity extends ListActivity {
         @Override
         public void run()
         {
-            testError = "run";
             new GetContacts().execute();
         }
     };
@@ -215,22 +182,60 @@ public class MainActivity extends ListActivity {
 
             String fuelType = fuelSpinner.getSelectedItem().toString();
 
+            RadioButton fuelButton = (RadioButton) findViewById(R.id.priceRadioButton);
+            RadioButton distanceButton = (RadioButton) findViewById(R.id.distanceRadioButton);
+            RadioButton valueButton = (RadioButton) findViewById(R.id.valueRadioButton);
+            String dollarSign = "";
+            String gasType = "";
             if(fuelType.equals("Regular")){
                 fuelType = "/reg";
+                gasType = "Reg";
+                priceKey = TAG_STATIONS_REG_PRICE;
+            }else if(fuelType.equals("Mid")){
+                fuelType = "/mid";
+                gasType = "Mid";
+                priceKey = TAG_STATIONS_MID_PRICE;
+            }else if(fuelType.equals("Premium")){
+                fuelType = "/pre";
+                gasType = "Pre";
+                priceKey = TAG_STATIONS_PRE_PRICE;
+            }else if(fuelType.equals("Diesel")){
+                fuelType = "/diesel";
+                gasType = "Dsl";
+                priceKey = TAG_STATIONS_DIESEL_PRICE;
+            }else{
+                fuelType = "/reg";
+                gasType = "ERR";
                 priceKey = TAG_STATIONS_REG_PRICE;
             }
-            if(fuelType.equals("Mid")){
-                fuelType = "/mid";
-                priceKey = TAG_STATIONS_MID_PRICE;
+
+            dollarSign = gasType + " $";
+
+            if(fuelButton.isChecked()){
+                if(fuelType.equals("Regular")){
+                    sortKey = TAG_STATIONS_REG_PRICE;
+                }
+                if(fuelType.equals("Mid")){
+                    sortKey = TAG_STATIONS_MID_PRICE;
+                }
+                if(fuelType.equals("Premium")){
+                    sortKey = TAG_STATIONS_PRE_PRICE;
+                }
+                if(fuelType.equals("Diesel")){
+                    sortKey = TAG_STATIONS_DIESEL_PRICE;
+                }
+            }else if(distanceButton.isChecked()){
+                sortKey = TAG_STATIONS_DISTANCE;
+            }else if(valueButton.isChecked()){
+                sortKey = TAG_VALUE;
+            }else{
+                //error case, should never reach this
+                testError = "NO BUT";
             }
-            if(fuelType.equals("Supreme")){
-                fuelType = "/pre";
-                priceKey = TAG_STATIONS_PRE_PRICE;
-            }
-            if(fuelType.equals("Diesel")){
-                fuelType = "/diesel";
-                priceKey = TAG_STATIONS_DIESEL_PRICE;
-            }
+
+
+
+
 
 
             String latStr = String.valueOf(latitude);
@@ -262,14 +267,6 @@ public class MainActivity extends ListActivity {
                     String status_description = status.getString(TAG_STATUS_DESCRIPTION);
                     String status_message = status.getString(TAG_STATUS_MESSAGE);
 
-                    /*
-                    if(status_error != null){
-                        testError = status_error;
-                    }else{
-                        testError = "NULL";
-                    }
-                    */
-
 
                     //grabs the geoLocation node from the JSON request
 
@@ -290,15 +287,11 @@ public class MainActivity extends ListActivity {
                     stations = jsonObj.getJSONArray(TAG_STATIONS);
 
 
-                    testError = "BEFORE";
-
 
                     //loop through array
                     for(int i = 0; i < stations.length(); i++){
                         //grabs first object in array
                         JSONObject c = stations.getJSONObject(i);
-
-                        testError = "DURING";
 
 
                         //grab object fields and assign to strings
@@ -330,14 +323,22 @@ public class MainActivity extends ListActivity {
                         //create new Station object and store the values in it
 
 
+                        //calculate value here
+
+                        //then assign it to a string
+                        String gasValue = "4";
+
                         //adds child nodes into HashMap   key/value
                         station_map.put(TAG_STATIONS_STATION, station);
-                        station_map.put(TAG_STATIONS_REG_PRICE, reg_price);
+                        station_map.put(TAG_STATIONS_REG_PRICE, dollarSign + reg_price);
                         station_map.put(TAG_STATIONS_ADDRESS, address);
                         station_map.put(TAG_STATIONS_DISTANCE, distance);
-                        station_map.put(TAG_STATIONS_MID_PRICE, mid_price);
-                        station_map.put(TAG_STATIONS_PRE_PRICE, pre_price);
-                        station_map.put(TAG_STATIONS_DIESEL_PRICE, diesel_price);
+                        station_map.put(TAG_STATIONS_MID_PRICE, dollarSign +  mid_price);
+                        station_map.put(TAG_STATIONS_PRE_PRICE, dollarSign +  pre_price);
+                        station_map.put(TAG_STATIONS_DIESEL_PRICE, dollarSign + diesel_price);
+
+                        //add value here
+                        station_map.put(TAG_VALUE, gasValue);
 
                         //then add to the entry list
                         stationList.add(station_map);
@@ -346,7 +347,6 @@ public class MainActivity extends ListActivity {
                     JSONFail = false;
                 } catch (JSONException e){
                     e.printStackTrace();
-                    testError = "JSON";
                     JSONFail = true;
                 }
             } else {
@@ -362,15 +362,15 @@ public class MainActivity extends ListActivity {
             super.onPostExecute(result);
             numTries++;
             final Handler handler = new Handler();
-            if(JSONFail == true && numTries < 3){
-                handler.postDelayed(jsonRunnable, 4000);
+            if(JSONFail == true && numTries < 4){
+                handler.postDelayed(jsonRunnable, 2500);
             }
 
 
 
-            if(numTries == 3){
+            if(numTries == 4){
                 //error flag for error message goes here
-                testError = "3 Fails";
+                testError = "4 Fails";
             }
 
             //cleanup progress dialog
@@ -417,4 +417,41 @@ public class MainActivity extends ListActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void emptyMPGfield(){
+        //handles the case where the user tries to press the Generate button
+        //but MPG edit text is empty
+
+    }
+
+    private void makeJSONCall(){
+        //handles the case where all necessary information is ready to make the JSON URL
+        //then attempts to make the call up to three times
+
+        //start loading screen here
+
+
+        //checks if GPS values can be obtained
+        if (gps.canGetLocation()) {
+            latitude = gps.getLatitude();
+            longitude = gps.getLongitude();
+
+            //Test toast to verify lat/long values
+            //Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+        } else {
+            //Toast.makeText(getApplicationContext(), "Couldn't load",Toast.LENGTH_LONG).show();
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gps.showSettingsAlert();
+        }
+
+        numTries = 0;
+        JSONFail = false;
+
+        new GetContacts().execute();
+        final TextView textViewToChange = (TextView) findViewById(R.id.vehicleTextView);
+        textViewToChange.setText(testError);
+    }
+
 }
