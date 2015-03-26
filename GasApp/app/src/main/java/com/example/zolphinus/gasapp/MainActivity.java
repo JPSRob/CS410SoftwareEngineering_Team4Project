@@ -37,7 +37,8 @@ public class MainActivity extends ListActivity {
 
     double latitude = 0.0;
     double longitude = 0.0;
-    double mpgValue = 0.0;
+    double mpgValue = 0.1;
+    double tankSize = 11.5;
 
 
 
@@ -144,10 +145,11 @@ public class MainActivity extends ListActivity {
     public void generateClick(View v){
     //test for empty MPG edit text
     EditText editText = (EditText) findViewById(R.id.mpgEditText);
+
     if( TextUtils.isEmpty(editText.getText())){
         Toast.makeText(getApplicationContext(), "Please enter MPG.", Toast.LENGTH_LONG).show();
     }else {
-
+        mpgValue = Double.parseDouble(editText.getText().toString());;
         makeJSONCall();
     }
     }
@@ -187,27 +189,7 @@ public class MainActivity extends ListActivity {
             RadioButton valueButton = (RadioButton) findViewById(R.id.valueRadioButton);
             String dollarSign = "";
             String gasType = "";
-            if(fuelType.equals("Regular")){
-                fuelType = "/reg";
-                gasType = "Reg";
-                priceKey = TAG_STATIONS_REG_PRICE;
-            }else if(fuelType.equals("Mid")){
-                fuelType = "/mid";
-                gasType = "Mid";
-                priceKey = TAG_STATIONS_MID_PRICE;
-            }else if(fuelType.equals("Premium")){
-                fuelType = "/pre";
-                gasType = "Pre";
-                priceKey = TAG_STATIONS_PRE_PRICE;
-            }else if(fuelType.equals("Diesel")){
-                fuelType = "/diesel";
-                gasType = "Dsl";
-                priceKey = TAG_STATIONS_DIESEL_PRICE;
-            }else{
-                fuelType = "/reg";
-                gasType = "ERR";
-                priceKey = TAG_STATIONS_REG_PRICE;
-            }
+
 
             dollarSign = gasType + " $";
 
@@ -233,6 +215,27 @@ public class MainActivity extends ListActivity {
                 testError = "NO BUT";
             }
 
+            if(fuelType.equals("Regular")){
+                fuelType = "/reg";
+                gasType = "Reg";
+                priceKey = TAG_STATIONS_REG_PRICE;
+            }else if(fuelType.equals("Mid")){
+                fuelType = "/mid";
+                gasType = "Mid";
+                priceKey = TAG_STATIONS_MID_PRICE;
+            }else if(fuelType.equals("Premium")){
+                fuelType = "/pre";
+                gasType = "Pre";
+                priceKey = TAG_STATIONS_PRE_PRICE;
+            }else if(fuelType.equals("Diesel")){
+                fuelType = "/diesel";
+                gasType = "Dsl";
+                priceKey = TAG_STATIONS_DIESEL_PRICE;
+            }else{
+                fuelType = "/reg";
+                gasType = "ERR";
+                priceKey = TAG_STATIONS_REG_PRICE;
+            }
 
 
 
@@ -294,6 +297,7 @@ public class MainActivity extends ListActivity {
                         JSONObject c = stations.getJSONObject(i);
 
 
+
                         //grab object fields and assign to strings
 
                         String country = c.getString(TAG_STATIONS_COUNTRY);
@@ -322,11 +326,26 @@ public class MainActivity extends ListActivity {
 
                         //create new Station object and store the values in it
 
-
+                        Double stationValue = 0.0;
                         //calculate value here
+                        if(fuelType.equals("/reg")){
+                            stationValue = getValue(distance, reg_price);
+                        }
+                        if(fuelType.equals("/mid")){
+                            stationValue = getValue(distance, mid_price);
+                        }
+                        if(fuelType.equals("/pre")){
+                            stationValue = getValue(distance, pre_price);
+                        }
+                        if(fuelType.equals("/diesel")){
+                            stationValue = getValue(distance, diesel_price);
+                        }
 
-                        //then assign it to a string
-                        String gasValue = "4";
+                        String gasValue = String.valueOf(stationValue);
+
+
+
+
 
                         //adds child nodes into HashMap   key/value
                         station_map.put(TAG_STATIONS_STATION, station);
@@ -454,4 +473,36 @@ public class MainActivity extends ListActivity {
         textViewToChange.setText(testError);
     }
 
+    double getValue(String distance, String price){
+        double CostToDrive;
+        double CostOfGas;
+        double value;
+
+        String temp = distance.replaceAll(" miles", "");
+
+
+        if(temp.equals("0")){
+            temp = "0.1";
+        }
+
+        String tempPrice = price;
+        if(tempPrice.equals("N/A")){
+            return 9999999.0;
+        }
+
+        double dis = Double.parseDouble(temp);
+        double pric = Double.parseDouble(tempPrice);
+
+        CostToDrive = (dis / mpgValue) * pric;
+        CostOfGas = tankSize * pric;
+
+
+        value = CostToDrive + CostOfGas;
+
+        if(tempPrice.equals("999.99")){
+            testError = String.valueOf(value);
+        }
+        return value;
+        //return String.valueOf(value);
+    }
 }
