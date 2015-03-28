@@ -1,5 +1,6 @@
 package com.example.zolphinus.gasapp;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -140,9 +141,24 @@ public class MainActivity extends ListActivity {
         startActivity( new Intent(getApplicationContext(), loadProfile.class));
         
     }
+
+    
     
     //button click for the Generate Button
     public void generateClick(View v){
+        /*******************Code Addition for loading message
+         * 3/27/15 - CRH 
+         */
+        AlertDialog.Builder loadingAlert = new AlertDialog.Builder(this);
+        loadingAlert.setMessage("Loading")
+        .create();
+        loadingAlert.show();
+
+        /*******************Code Addition for loading message
+         *
+         */
+        
+
     //test for empty MPG edit text
     EditText editText = (EditText) findViewById(R.id.mpgEditText);
 
