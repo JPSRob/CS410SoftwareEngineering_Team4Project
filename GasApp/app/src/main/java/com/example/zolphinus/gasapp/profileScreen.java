@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.FileInputStream;
@@ -30,12 +31,15 @@ public class profileScreen extends ActionBarActivity {
         //));
 
         //We will concatenate contents of profileNameTextEdit and MPGTextEdit with a ",' delimiter
-        profileInfo = (R.id.profileNameTextEdit) + "," + (R.id.MPGTextEdit);
+        EditText myProfileEdit = (EditText)findViewById(R.id.profileNameTextEdit);
+        EditText myMPGEdit = (EditText)findViewById(R.id.MPGTextEdit);
+        profileInfo = (myProfileEdit.getText().toString()) + "," + (myMPGEdit.getText().toString() + "\n");
 
         FileOutputStream outputToFile = null;
         try {
             //MODE_APPEND will add to end of file, instead of overwriting the file
             outputToFile = openFileOutput(profileFileName, Context.MODE_APPEND);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
