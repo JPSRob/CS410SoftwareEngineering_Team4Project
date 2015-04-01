@@ -1,5 +1,6 @@
 package com.example.zolphinus.gasapp;
 
+import android.app.ListActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
@@ -15,11 +16,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class loadProfile extends ActionBarActivity {
+public class loadProfile extends ListActivity {
 
-    private static String profileFileName = "Profiles.txt"; //File name
+    private static String profileFileName = "Profiles.txt"; //Internal file name
     FileInputStream readFile = null;
-    ArrayList profiles; //ArrayList to hold profile entries for ListView GUI
+    ArrayList profiles = new ArrayList(); //ArrayList to hold profile entries for ListView GUI
 
     Button Load; //the button that loads and exits activity
     int information_Search = 70;
@@ -29,10 +30,10 @@ public class loadProfile extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load_profile);
-        Load = (Button) findViewById(R.id.Load);
+        //Load = (Button) findViewById(R.id.Load);
 
         //Call function to read internal file and display to ListView
-        updateListView();
+        //updateListView();
 
         /*Load.setOnClickListener(new View.OnClickListener());
         {
@@ -70,6 +71,7 @@ public class loadProfile extends ActionBarActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         while(intToCast != -1){
             //Grab characters from file one at a time
             tempChar = (char) intToCast;
@@ -82,12 +84,14 @@ public class loadProfile extends ActionBarActivity {
             else{
                 tempString = tempString + tempChar;
             }
+
             //Keep reading characters from file
             try {
-                //intToCast = readFile.read();
+                intToCast = readFile.read();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
 
         //Display profiles ArrayList into ListView loadProfileClick GUI
