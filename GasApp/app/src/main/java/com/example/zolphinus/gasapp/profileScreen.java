@@ -78,6 +78,12 @@ public class profileScreen extends ActionBarActivity {
             e.printStackTrace();
         }
         testReadText += new String(input);
+        //Close the file
+        try {
+            readFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Toast.makeText(getApplicationContext(), testReadText, Toast.LENGTH_LONG).show();
         //*******************************************************************************
 

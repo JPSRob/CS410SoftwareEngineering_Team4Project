@@ -34,13 +34,12 @@
         android:id="@android:id/list"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_above="@+id/button"
         android:layout_below="@+id/textView2"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_alignBaseline="@+id/textView2"
-        android:choiceMode="multipleChoice"
+        android:choiceMode="singleChoice"
         android:clickable="true"
         android:fastScrollAlwaysVisible="false"
-        android:nestedScrollingEnabled="false" />
+        android:nestedScrollingEnabled="false"
+        android:layout_above="@+id/Load" />
 
 </RelativeLayout>
