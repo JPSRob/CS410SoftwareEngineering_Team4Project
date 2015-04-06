@@ -1,6 +1,5 @@
 package com.example.zolphinus.gasapp;
 
-import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -13,7 +12,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -30,9 +32,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends ListActivity {
+    
+    
+    /**************************/ 
+    //load message additions
+            
+            //Credit Kostya But via stackoverflow.com
+    String myLog = "myLog";
+
+    AlphaAnimation inAnimation;
+    AlphaAnimation outAnimation;
+
+    FrameLayout progressBarHolder;
+    Button generateButton;
+    
+    /**********************/ 
 
     private ProgressDialog pDialog;
 
@@ -111,9 +129,10 @@ public class MainActivity extends ListActivity {
 
 
 
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         //String latitude;
         //String longitude;
         super.onCreate(savedInstanceState);
@@ -125,8 +144,49 @@ public class MainActivity extends ListActivity {
         StrictMode.setThreadPolicy(policy);
         stationList = new ArrayList<Map<String,String>>();
         ListView lv = getListView();
+
+        //Load Message additions/*****************************************/ //Load Message additions
+        generateButton = (Button) findViewById(R.id.generateButton);
+        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
     }
 
+    //Load Message additions
+    private class loadingMessage extends AsyncTask <Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            generateButton.setEnabled(false);
+            inAnimation = new AlphaAnimation(0f, 1f);
+            inAnimation.setDuration(200);
+            progressBarHolder.setAnimation(inAnimation);
+            progressBarHolder.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            outAnimation = new AlphaAnimation(1f, 0f);
+            outAnimation.setDuration(200);
+            progressBarHolder.setAnimation(outAnimation);
+            progressBarHolder.setVisibility(View.GONE);
+            generateButton.setEnabled(true);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                for (int i = 0; i < 5; i++) {
+                    Log.d(myLog, "Step " + i);
+                    TimeUnit.SECONDS.sleep(1);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }//Load Message additions
+    
     //button click for Create and Load Profile Buttons
     //BORROWED LOGIC AND CODE FROM DEVELOPER.ANDROID.COM
 
@@ -146,18 +206,14 @@ public class MainActivity extends ListActivity {
     
     //button click for the Generate Button
     public void generateClick(View v){
-        /*******************Code Addition for loading message
-         * 3/27/15 - CRH 
-         */
-        AlertDialog.Builder loadingAlert = new AlertDialog.Builder(this);
-        loadingAlert.setMessage("Loading")
-        .create();
-        loadingAlert.show();
 
-        /*******************Code Addition for loading message
-         *
-         */
-        
+        switch (v.getId()) {
+            case R.id.generateButton:
+                new loadingMessage().execute();
+                break;
+        }
+
+
 
     //test for empty MPG edit text
     EditText editText = (EditText) findViewById(R.id.mpgEditText);
@@ -165,7 +221,7 @@ public class MainActivity extends ListActivity {
     if( TextUtils.isEmpty(editText.getText())){
         Toast.makeText(getApplicationContext(), "Please enter MPG.", Toast.LENGTH_LONG).show();
     }else {
-        mpgValue = Double.parseDouble(editText.getText().toString());;
+        mpgValue = Double.parseDouble(editText.getText().toString());
         makeJSONCall();
     }
     }
@@ -401,8 +457,6 @@ public class MainActivity extends ListActivity {
                 handler.postDelayed(jsonRunnable, 2500);
             }
 
-
-
             if(numTries == 4){
                 //error flag for error message goes here
                 testError = "4 Fails";
@@ -417,17 +471,13 @@ public class MainActivity extends ListActivity {
 
             setListAdapter(null);
 
-
             //Update JSON into ListView
                   ListAdapter adapter = new SimpleAdapter(
                     MainActivity.this, stationList,
                     R.layout.list_item, new String[] {TAG_STATIONS_STATION, TAG_STATIONS_ADDRESS,
                     TAG_STATIONS_DISTANCE, priceKey }, new int[] {R.id.name,
                     R.id.email, R.id.mobile, R.id.price});
-
-
             setListAdapter(adapter);
-
         }
     }
 
