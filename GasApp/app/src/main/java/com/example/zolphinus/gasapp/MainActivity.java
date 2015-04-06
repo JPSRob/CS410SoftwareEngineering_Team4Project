@@ -52,7 +52,7 @@ public class MainActivity extends ListActivity {
     
     /**********************/ 
 
-    private ProgressDialog pDialog;
+    private ProgressDialog pDialog = null;
 
     double latitude = 0.0;
     double longitude = 0.0;
@@ -158,7 +158,7 @@ public class MainActivity extends ListActivity {
             super.onPreExecute();
             generateButton.setEnabled(false);
             inAnimation = new AlphaAnimation(0f, 1f);
-            inAnimation.setDuration(200);
+            inAnimation.setDuration(400);
             progressBarHolder.setAnimation(inAnimation);
             progressBarHolder.setVisibility(View.VISIBLE);
         }
@@ -167,7 +167,7 @@ public class MainActivity extends ListActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             outAnimation = new AlphaAnimation(1f, 0f);
-            outAnimation.setDuration(200);
+            outAnimation.setDuration(400);
             progressBarHolder.setAnimation(outAnimation);
             progressBarHolder.setVisibility(View.GONE);
             generateButton.setEnabled(true);
@@ -207,11 +207,13 @@ public class MainActivity extends ListActivity {
     //button click for the Generate Button
     public void generateClick(View v){
 
+        /*
         switch (v.getId()) {
             case R.id.generateButton:
                 new loadingMessage().execute();
                 break;
         }
+        */
 
 
 
@@ -241,10 +243,12 @@ public class MainActivity extends ListActivity {
         @Override
         protected void onPreExecute(){
             super.onPreExecute();
-            pDialog = new ProgressDialog(MainActivity.this);
-            pDialog.setMessage("Please wait...");
-            pDialog.setCancelable(false);
-            //pDialog.show();
+            if(pDialog == null) {
+                pDialog = new ProgressDialog(MainActivity.this);
+                pDialog.setMessage("Please wait...");
+                pDialog.setCancelable(false);
+                pDialog.show();
+            }
 
         }
 
@@ -462,12 +466,14 @@ public class MainActivity extends ListActivity {
                 testError = "4 Fails";
             }
 
-            //cleanup progress dialog
-            if(pDialog != null){
-                if(pDialog.isShowing())
-                    pDialog.dismiss();
-                pDialog = null;
+            if (pDialog != null) {
+                if(numTries == 4 || JSONFail == false) {
+                    if (pDialog.isShowing())
+                        pDialog.dismiss();
+                    pDialog = null;
+                }
             }
+
 
             setListAdapter(null);
 
@@ -478,6 +484,7 @@ public class MainActivity extends ListActivity {
                     TAG_STATIONS_DISTANCE, priceKey }, new int[] {R.id.name,
                     R.id.email, R.id.mobile, R.id.price});
             setListAdapter(adapter);
+
         }
     }
 
