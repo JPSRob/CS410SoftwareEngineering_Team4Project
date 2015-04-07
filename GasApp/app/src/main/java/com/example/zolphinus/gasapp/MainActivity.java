@@ -136,7 +136,12 @@ public class MainActivity extends ListActivity {
         //String latitude;
         //String longitude;
         super.onCreate(savedInstanceState);
+
+
+        startActivity(new Intent(getApplicationContext(), Team4SplashScreen.class));
+        startActivity(new Intent(getApplicationContext(), SplashScreen.class));
         setContentView(R.layout.activity_main);
+
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
