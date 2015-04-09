@@ -28,10 +28,9 @@ public class loadProfile extends ListActivity {
     private static String profileFileName = "Profiles.txt"; //Internal file name
     FileInputStream readInFile = null;
     String tempName = null;
-    ArrayList<HashMap<String, String>> profileList; //ArrayList<HashMap to hold profile entries for ListView GUI
-    String inputString = "kitty";
 
-
+    //ArrayList<HashMap to hold profile entries for ListView GUI
+    ArrayList<HashMap<String, String>> profileList;
     //Const String keys for HashMap
     private static final String TAG_NAME = "name"; //Name of profile
     private static final String TAG_MPG = "mpg"; //MPG value
@@ -76,8 +75,10 @@ public class loadProfile extends ListActivity {
         int counter = 0;
         int counterDelimiter = 0;
         char tempChar;
+        String tempString = null;
+        Boolean endOfFile = false;
+        Boolean afterComma = false;
         String name = null, mpg = null , fuel = null; //HashMap id values
-        //Create new HashMap entry
         HashMap<String, String> profileHash = new HashMap<String, String>();
 
     /*
@@ -112,9 +113,9 @@ public class loadProfile extends ListActivity {
         }
     */
         //butteredToast will read "poop" if the input file is null
-        String poopString = "null poop";
+        String poopString = "poop";
 
-        //InputStreamReader method of opening .txt file in \Build folder
+        //BufferedReader(InputStreamReader(InputStream)) method of opening Profiles.txt file
         InputStream inStream = null;
         InputStreamReader inReader = null;
         BufferedReader buffReader = null;
@@ -133,59 +134,69 @@ public class loadProfile extends ListActivity {
         //Initialize BufferedReader with our InputStreamReader - this interface will read from the file
         buffReader = new BufferedReader(inReader);
 
-        //Read a line from the file
-        try {
-            poopString = buffReader.readLine(); // YAYYYYYYYYY! THIS WORKS!!!! IT'S READING FROM FILE, AS PROVEN BY butteredToast :D
-        } catch (IOException e) {
-            e.printStackTrace();
+        //While loop that will read each line from file
+        while(endOfFile == false){
+
+            //Read a line from the file
+            try {
+                tempString = buffReader.readLine();
+
+                //If line read is not empty, parse the line
+                if(tempString.length() != 0) {
+
+                    //Clear HashMap for new entry
+                    profileHash.clear();
+                    //Clear counter for new line
+                    counter = 0;
+
+                    //While loop that will parse the current line
+                    while (counter < tempString.length()) {
+
+                        //Grab the current substring character from the line
+                        tempChar = tempString.charAt(counter);
+
+                        //If character is a comma, ignore this delimiter and change afterComma to true to indicate we're now reading into mpg field
+                        if (tempChar == ',') {
+                            afterComma = true;
+                            counter++;
+                        }
+                        //Else if we have not hit the comma delimiter in the line, we are reading into name field
+                        else if (tempChar != ',' && afterComma == false){
+                            name = name + tempChar;
+                            counter++;
+                        }
+                        //Else if we have already hit the comma delimiter, read into mpg field
+                        else if (tempChar != ',' && afterComma == true){
+                            mpg = mpg + tempChar;
+                            counter++;
+                        }
+
+                    }
+
+                    //Add the name and mpg Strings to the HashMap
+                    profileHash.put(TAG_NAME, name);
+                    profileHash.put(TAG_MPG, mpg);
+                    //profileHash.put(TAG_FUEL, fuel); //Will implement fuel type later
+
+                    //Clear the name, mpg, and fuel Strings for use in next line
+                    name = null;
+                    mpg = null;
+                    //fuel = null; //Will implement fuel type later
+
+                    //Add HashMap to ArrayList
+                    profileList.add(profileHash);
+
+                }
+                //Else if line read is empty, we have hit the end of the file and should stop reading
+                else if (tempString.length() == 0){
+                    endOfFile = true;
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
-
-
-        //inputString = "Hello,21";
-        //Parse String holding contents of file
-    /*
-        while(counter < inputString.length()){
-            //Grab characters from string one at a time
-            tempChar = inputString.charAt(counter);
-            poopString = poopString + tempChar;
-            //If find comma "," delimiter, ignore and increment counterDelimiter to 1 to indicate we're reading "mpg" characters
-            if(tempChar == ','){
-                counterDelimiter = 1;
-            }
-
-            //Else if counterDelimiter is 0, we're still reading in "name" characters
-            else if(tempChar != '\n' && counterDelimiter == 0){
-                name = name + tempChar;
-            }
-
-            //Else if counterDelimiter is 1, we're still reading in "mpg" characters
-            else if(tempChar != '\n' && counterDelimiter == 1){
-                mpg = mpg + tempChar;
-            }
-
-            /*If end of line: finish mpg entry, fill profileHash entries, add to profileList array, and reset counterDelimiter to 0
-            to indicate we're reading "name" characters
-            else if(tempChar == '\n' || tempChar == '\r'){
-                mpg = mpg + tempChar;
-
-                profileHash.put(TAG_NAME, name);
-                profileHash.put(TAG_MPG, mpg);
-                //profileHash.put(TAG_FUEL, fuel); //Will implement fuel type later
-
-                tempName = tempName + name; //For testing with Toast
-                name = null;
-                mpg = null;
-                //fuel = null;
-
-                profileList.add(profileHash);
-
-                counterDelimiter = 0;
-            }
-
-            counter++;
-
-        }
-    */
 
         //*********FOR TESTING PURPOSES************
         Toast butteredToast = null;
