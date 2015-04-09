@@ -12,9 +12,12 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -77,7 +80,7 @@ public class loadProfile extends ListActivity {
         //Create new HashMap entry
         HashMap<String, String> profileHash = new HashMap<String, String>();
 
-
+    /*
         //Attempt to open the internal Profiles.txt
         try {
             readInFile = openFileInput(profileFileName);
@@ -107,12 +110,41 @@ public class loadProfile extends ListActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    */
+        //butteredToast will read "poop" if the input file is null
+        String poopString = "null poop";
 
-        String poopString = "";
+        //InputStreamReader method of opening .txt file in \Build folder
+        InputStream inStream = null;
+        InputStreamReader inReader = null;
+        BufferedReader buffReader = null;
+
+        //Open file
+        try {
+            inStream = openFileInput(profileFileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //While the file is not empty/missing, initialize InputStreamReader with file
+        if(inStream != null) {
+            inReader = new InputStreamReader(inStream);
+            poopString = "not null poop";
+        }
+        //Initialize BufferedReader with our InputStreamReader - this interface will read from the file
+        buffReader = new BufferedReader(inReader);
+
+        //Read a line from the file
+        try {
+            poopString = buffReader.readLine(); // YAYYYYYYYYY! THIS WORKS!!!! IT'S READING FROM FILE, AS PROVEN BY butteredToast :D
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         //inputString = "Hello,21";
         //Parse String holding contents of file
+    /*
         while(counter < inputString.length()){
-
             //Grab characters from string one at a time
             tempChar = inputString.charAt(counter);
             poopString = poopString + tempChar;
@@ -132,7 +164,7 @@ public class loadProfile extends ListActivity {
             }
 
             /*If end of line: finish mpg entry, fill profileHash entries, add to profileList array, and reset counterDelimiter to 0
-            to indicate we're reading "name" characters*/
+            to indicate we're reading "name" characters
             else if(tempChar == '\n' || tempChar == '\r'){
                 mpg = mpg + tempChar;
 
@@ -153,6 +185,7 @@ public class loadProfile extends ListActivity {
             counter++;
 
         }
+    */
 
         //*********FOR TESTING PURPOSES************
         Toast butteredToast = null;
@@ -160,19 +193,16 @@ public class loadProfile extends ListActivity {
         //*****************************************
 
         //Display profileList into ListView
-        ListAdapter adapter = new SimpleAdapter(this, profileList, R.layout.load_layout,
-                new String[]{TAG_NAME, TAG_MPG}, new int[]{R.id.nameLayout, R.id.mpgLayout});
-        setListAdapter(null); //Clear prior list adapters
-        setListAdapter(adapter);
+        //ListAdapter adapter = new SimpleAdapter(this, profileList, R.layout.load_layout,
+        //        new String[]{TAG_NAME, TAG_MPG}, new int[]{R.id.nameLayout, R.id.mpgLayout});
+        //setListAdapter(null); //Clear prior list adapters
+        //setListAdapter(adapter);
 
     }
         
     public void loadProfileSelected(View v){
         //startActivity(new Intent(getApplicationContext(), MainActivity.class
         //));
-
-
-
         setContentView(R.layout.activity_main);
         this.finish();
     }
