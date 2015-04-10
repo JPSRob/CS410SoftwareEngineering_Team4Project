@@ -27,10 +27,9 @@ public class loadProfile extends ListActivity {
     //Variables & declarations
     private static String profileFileName = "Profiles.txt"; //Internal file name
     FileInputStream readInFile = null;
-    String tempName = null;
 
     //ArrayList<HashMap to hold profile entries for ListView GUI
-    ArrayList<HashMap<String, String>> profileList;
+    //ArrayList<HashMap<String, String>> profileList;
     //Const String keys for HashMap
     private static final String TAG_NAME = "name"; //Name of profile
     private static final String TAG_MPG = "mpg"; //MPG value
@@ -78,40 +77,10 @@ public class loadProfile extends ListActivity {
         String tempString = null;
         Boolean endOfFile = false;
         Boolean afterComma = false;
-        String name = null, mpg = null , fuel = null; //HashMap id values
+        String name = "", mpg = "", fuel = ""; //HashMap id values
         HashMap<String, String> profileHash = new HashMap<String, String>();
+        ArrayList<HashMap<String, String>> profileList = new ArrayList<HashMap<String, String>>();
 
-    /*
-        //Attempt to open the internal Profiles.txt
-        try {
-            readInFile = openFileInput(profileFileName);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        //Put contents of file into String to be parsed
-        byte[] inputByte = new byte[0];
-
-        try {
-            inputByte = new byte[readInFile.available()];
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            while(readInFile.read(inputByte) != -1) {}
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        inputString += new String(inputByte);
-
-        //Close the file
-        try {
-            readInFile.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    */
         //butteredToast will read "poop" if the input file is null
         String poopString = "poop";
 
@@ -134,20 +103,10 @@ public class loadProfile extends ListActivity {
         //Initialize BufferedReader with our InputStreamReader - this interface will read from the file
         buffReader = new BufferedReader(inReader);
 
-        //While loop that will read each line from file
-        while(endOfFile == false){
-
-            //Read a line from the file
-            try {
-                tempString = buffReader.readLine();
-
-                //If line read is not empty, parse the line
-                if(tempString.length() != 0) {
-
-                    //Clear HashMap for new entry
-                    profileHash.clear();
-                    //Clear counter for new line
-                    counter = 0;
+        //File parsing logic
+        try {
+            //While loop that will read each line from file
+            while((tempString = buffReader.readLine()) != null){
 
                     //While loop that will parse the current line
                     while (counter < tempString.length()) {
@@ -160,43 +119,45 @@ public class loadProfile extends ListActivity {
                             afterComma = true;
                             counter++;
                         }
-                        //Else if we have not hit the comma delimiter in the line, we are reading into name field
-                        else if (tempChar != ',' && afterComma == false){
-                            name = name + tempChar;
-                            counter++;
+                        else {
+                            //if we have not hit the comma delimiter in the line, read into name field
+                            if (!afterComma) {
+                                name = name + tempChar;
+                                counter++;
+                            }
+                            //if we have already hit the comma delimiter, read into mpg field
+                            else if (afterComma) {
+                                mpg = mpg + tempChar;
+                                counter++;
+                            }
                         }
-                        //Else if we have already hit the comma delimiter, read into mpg field
-                        else if (tempChar != ',' && afterComma == true){
-                            mpg = mpg + tempChar;
-                            counter++;
-                        }
-
                     }
+
+                    //For testing with butteredToast
+                    poopString = name + mpg;
 
                     //Add the name and mpg Strings to the HashMap
                     profileHash.put(TAG_NAME, name);
                     profileHash.put(TAG_MPG, mpg);
                     //profileHash.put(TAG_FUEL, fuel); //Will implement fuel type later
 
+                    //Add HashMap to ArrayList
+                    profileList.add(profileHash); //!!!!!!!!!!!!!!!! CRASH BUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                    //Clear HashMap for next entry
+                    profileHash.clear();
+                    //Clear counter for next line
+                    counter = 0;
                     //Clear the name, mpg, and fuel Strings for use in next line
                     name = null;
                     mpg = null;
                     //fuel = null; //Will implement fuel type later
 
-                    //Add HashMap to ArrayList
-                    profileList.add(profileHash);
-
-                }
-                //Else if line read is empty, we have hit the end of the file and should stop reading
-                else if (tempString.length() == 0){
-                    endOfFile = true;
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
 
         //*********FOR TESTING PURPOSES************
         Toast butteredToast = null;
@@ -204,10 +165,10 @@ public class loadProfile extends ListActivity {
         //*****************************************
 
         //Display profileList into ListView
-        //ListAdapter adapter = new SimpleAdapter(this, profileList, R.layout.load_layout,
-        //        new String[]{TAG_NAME, TAG_MPG}, new int[]{R.id.nameLayout, R.id.mpgLayout});
-        //setListAdapter(null); //Clear prior list adapters
-        //setListAdapter(adapter);
+        ListAdapter adapter = new SimpleAdapter(this, profileList, R.layout.load_layout,
+                new String[]{TAG_NAME, TAG_MPG}, new int[]{R.id.nameLayout, R.id.mpgLayout});
+        setListAdapter(null); //Clear prior list adapters
+        setListAdapter(adapter);
 
     }
         
