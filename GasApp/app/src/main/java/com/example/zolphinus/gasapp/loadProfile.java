@@ -29,7 +29,7 @@ public class loadProfile extends ListActivity {
     FileInputStream readInFile = null;
 
     //ArrayList<HashMap to hold profile entries for ListView GUI
-    //ArrayList<HashMap<String, String>> profileList;
+    ArrayList<HashMap<String, String>> profileList = new ArrayList<HashMap<String, String>>();
     //Const String keys for HashMap
     private static final String TAG_NAME = "name"; //Name of profile
     private static final String TAG_MPG = "mpg"; //MPG value
@@ -79,7 +79,7 @@ public class loadProfile extends ListActivity {
         Boolean afterComma = false;
         String name = "", mpg = "", fuel = ""; //HashMap id values
         HashMap<String, String> profileHash = new HashMap<String, String>();
-        ArrayList<HashMap<String, String>> profileList = new ArrayList<HashMap<String, String>>();
+
 
         //butteredToast will read "poop" if the input file is null
         String poopString = "poop";
@@ -145,7 +145,7 @@ public class loadProfile extends ListActivity {
                     profileList.add(profileHash); //!!!!!!!!!!!!!!!! CRASH BUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                     //Clear HashMap for next entry
-                    profileHash.clear();
+                    //profileHash.clear();
                     //Clear counter for next line
                     counter = 0;
                     //Clear the name, mpg, and fuel Strings for use in next line
@@ -165,7 +165,7 @@ public class loadProfile extends ListActivity {
         //*****************************************
 
         //Display profileList into ListView
-        ListAdapter adapter = new SimpleAdapter(this, profileList, R.layout.load_layout,
+        ListAdapter adapter = new SimpleAdapter(loadProfile.this, profileList, R.layout.load_layout,
                 new String[]{TAG_NAME, TAG_MPG}, new int[]{R.id.nameLayout, R.id.mpgLayout});
         setListAdapter(null); //Clear prior list adapters
         setListAdapter(adapter);

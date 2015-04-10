@@ -38,7 +38,7 @@ public class profileScreen extends ActionBarActivity {
         FileOutputStream outputToFile = null;
         try {
             //MODE_APPEND will add to end of file, instead of overwriting the file
-            outputToFile = openFileOutput(profileFileName, Context.MODE_APPEND);
+            outputToFile = openFileOutput(profileFileName ,Context.MODE_APPEND);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
