@@ -22,11 +22,14 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-            android:text="Load"
+            android:text="Load Profile"
             android:id="@+id/Load"
+        android:onClick="loadProfileSelected"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="loadProfileSelected" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="48dp"
+        android:layout_marginStart="48dp" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -41,5 +44,16 @@
         android:fastScrollAlwaysVisible="false"
         android:nestedScrollingEnabled="false"
         android:layout_above="@+id/Load" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Profiles"
+        android:id="@+id/button"
+        android:layout_below="@android:id/list"
+        android:layout_alignRight="@android:id/list"
+        android:layout_alignEnd="@android:id/list"
+        android:layout_marginRight="38dp"
+        android:layout_marginEnd="38dp" />
 
 </RelativeLayout>

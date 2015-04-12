@@ -43,25 +43,7 @@ public class loadProfile extends ListActivity {
 
         //Call function to read internal file and display to ListView
         updateListView();
-
-
-
-        /*Load.setOnClickListener(new View.OnClickListener());
-        {
-            //if listen senses activity load struct info
-
-        }*/
-
-  /*  public void onClick(View v){
-        try{
-            FileInputStream fis = openFileInput("text.txt");
-            InputStreamReader isr = new InputStreamReader(fis)
-        }catch ( FileNotFoundException e){
-            e.printStackTrace();
-        }
- */       
     }
-        //profileName = findViewById(R.id.textView2)
 
     public void updateListView(){
 
@@ -138,10 +120,8 @@ public class loadProfile extends ListActivity {
                     //profileHash.put(TAG_FUEL, fuel); //Will implement fuel type later
 
                     //Add HashMap to ArrayList
-                    profileList.add(profileHash); //!!!!!!!!!!!!!!!! CRASH BUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    profileList.add(profileHash);
 
-                    //Clear HashMap for next entry
-                    //profileHash.clear();
                     //Clear counter for next line
                     counter = 0;
                     //Clear the name, mpg, and fuel Strings for use in next line
@@ -167,10 +147,15 @@ public class loadProfile extends ListActivity {
         setListAdapter(adapter);
 
     }
+
+    //Method to delete contents of Profiles.txt
+    public void clearFile(){
+
+
+        
+    }
         
     public void loadProfileSelected(View v){
-        //startActivity(new Intent(getApplicationContext(), MainActivity.class
-        //));
         setContentView(R.layout.activity_main);
         this.finish();
     }
