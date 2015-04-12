@@ -146,13 +146,32 @@ public class loadProfile extends ListActivity {
         setListAdapter(null); //Clear prior list adapters
         setListAdapter(adapter);
 
+        //File I/O cleanup
+        if (inStream != null) {
+            try {
+                inStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            inReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            buffReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     //Method to delete contents of Profiles.txt
     public void clearFile(){
 
 
-        
+
     }
         
     public void loadProfileSelected(View v){
