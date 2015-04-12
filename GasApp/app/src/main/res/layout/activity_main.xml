@@ -54,7 +54,8 @@
                     android:background="@color/ButtonColor"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="@dimen/defaultMargin"
-                    android:enabled="true" />
+                    android:enabled="true"
+                    android:fadingEdge="horizontal" />
 
             </LinearLayout>
 
