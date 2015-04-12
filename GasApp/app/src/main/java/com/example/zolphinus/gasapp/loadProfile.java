@@ -2,19 +2,15 @@ package com.example.zolphinus.gasapp;
 
 import android.app.ListActivity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -52,7 +48,7 @@ public class loadProfile extends ListActivity {
 
         /*Load.setOnClickListener(new View.OnClickListener());
         {
-            //if listern sense activity load struct info 
+            //if listen senses activity load struct info
 
         }*/
 

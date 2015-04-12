@@ -1,0 +1,5 @@
+C:\Users\Cheech Wife\Documents\GitHub\CS410SoftwareEngineering_Team4Project\loadscreen\app\build\intermediates\classes\debug
+C:\Users\Cheech Wife\Documents\GitHub\CS410SoftwareEngineering_Team4Project\loadscreen\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-5d5f3b8e24fd3aefc6ab7cea9e57dc2c69e16d73.jar
+C:\Users\Cheech Wife\Documents\GitHub\CS410SoftwareEngineering_Team4Project\loadscreen\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-2afbc4203e2f992ae77d8354a1bcdf2e08d6d1e0.jar
+C:\Users\Cheech Wife\Documents\GitHub\CS410SoftwareEngineering_Team4Project\loadscreen\app\build\intermediates\pre-dexed\debug\classes-388dcb96195f41b8bd2447f1e1af5f98b3f9d6e9.jar
+C:\Users\Cheech Wife\Documents\GitHub\CS410SoftwareEngineering_Team4Project\loadscreen\app\build\intermediates\pre-dexed\debug\classes-71258a707d0d16b207b83f79e8ec99e81aca05a7.jar
