@@ -1,6 +1,7 @@
 package com.example.zolphinus.gasapp;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,7 +11,10 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -33,16 +37,17 @@ public class loadProfile extends ListActivity {
 
     Button Load; //the button that loads and exits activity
     int information_Search = 70;
-    //EditText profileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load_profile);
         Load = (Button) findViewById(R.id.Load);
 
         //Call function to read internal file and display to ListView
         updateListView();
+
     }
 
     public void updateListView(){
@@ -58,9 +63,8 @@ public class loadProfile extends ListActivity {
         String name = "", mpg = "", fuel = ""; //HashMap id values
         HashMap<String, String> profileHash = new HashMap<String, String>();
 
-
-        //butteredToast will read "poop" if the input file is null
-        String poopString = "poop";
+        //FOR TESTING: butteredToast will read "poop" if the input file is null
+        //String poopString = "poop";
 
         //BufferedReader(InputStreamReader(InputStream)) method of opening Profiles.txt file
         InputStream inStream = null;
@@ -76,7 +80,7 @@ public class loadProfile extends ListActivity {
         //While the file is not empty/missing, initialize InputStreamReader with file
         if(inStream != null) {
             inReader = new InputStreamReader(inStream);
-            poopString = "not null poop";
+            //poopString = "not null poop"; //FOR TESTING: Was used to test w/butteredToast if file is not null
         }
         //Initialize BufferedReader with our InputStreamReader - this interface will read from the file
         buffReader = new BufferedReader(inReader);
@@ -112,7 +116,7 @@ public class loadProfile extends ListActivity {
                     }
 
                     //For testing with butteredToast
-                    poopString = name + mpg;
+                    //poopString = name + mpg;
 
                     //Add the name and mpg Strings to the HashMap
                     profileHash.put(TAG_NAME, name);
@@ -134,10 +138,9 @@ public class loadProfile extends ListActivity {
             e.printStackTrace();
         }
 
-
         //*********FOR TESTING PURPOSES************
-        Toast butteredToast = null;
-        butteredToast.makeText(getApplicationContext(), poopString, Toast.LENGTH_LONG).show();
+        //Toast butteredToast = null;
+        //butteredToast.makeText(getApplicationContext(), poopString, Toast.LENGTH_LONG).show();
         //*****************************************
 
         //Display profileList into ListView
@@ -168,9 +171,20 @@ public class loadProfile extends ListActivity {
     }
 
     //Method to delete contents of Profiles.txt
-    public void clearFile(){
+    public void clearFile(View v){
 
+        //Delete Profiles.txt
+        deleteFile(profileFileName);
+        //Re-create a blank Profiles.txt
+        FileOutputStream outputToFile = null;
+        try {
+            outputToFile = openFileOutput(profileFileName ,Context.MODE_APPEND);
 
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        //Exit activity_load_profile
+        loadProfileSelected(v);
 
     }
         
@@ -178,7 +192,6 @@ public class loadProfile extends ListActivity {
         setContentView(R.layout.activity_main);
         this.finish();
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
