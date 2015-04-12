@@ -1,12 +1,13 @@
 package com.example.zolphinus.gasapp;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
 
 
-public class profileScreen extends ActionBarActivity {
+public class profileScreen extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
