@@ -23,20 +23,23 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ok"
-        android:id="@+id/button"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:text="Load Profile"
+        android:id="@+id/Load"
         android:onClick="loadProfileSelected"
-        android:background="@color/ButtonColor" />
+        android:background="@color/ButtonColor"
+        android:layout_alignTop="@+id/button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="48dp"
+        android:layout_marginStart="48dp" />
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/loadProfileClick"
+        android:id="@android:id/list"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_above="@+id/button"
+        android:layout_above="@+id/Load"
         android:layout_below="@+id/textView2"
         android:layout_alignWithParentIfMissing="true"
         android:layout_alignBaseline="@+id/textView2"
@@ -45,5 +48,18 @@
         android:fastScrollAlwaysVisible="false"
         android:nestedScrollingEnabled="false"
         android:background="@color/ListEntryColor" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Profiles"
+        android:id="@+id/button"
+        android:onClick="clearFile"
+        android:background="@color/ButtonColor"
+        android:layout_marginRight="46dp"
+        android:layout_marginEnd="46dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@android:id/list"
+        android:layout_alignEnd="@android:id/list" />
 
 </RelativeLayout>
