@@ -57,14 +57,14 @@ public class loadProfile extends ListActivity {
         int counter = 0;
         int counterDelimiter = 0;
         char tempChar;
-        String tempString = null;
+        String tempString = "";
         Boolean endOfFile = false;
         Boolean afterComma = false;
         String name = "", mpg = "", fuel = ""; //HashMap id values
         HashMap<String, String> profileHash = new HashMap<String, String>();
 
         //FOR TESTING: butteredToast will read "poop" if the input file is null
-        //String poopString = "poop";
+        //String poopString = "";
 
         //BufferedReader(InputStreamReader(InputStream)) method of opening Profiles.txt file
         InputStream inStream = null;
@@ -116,7 +116,7 @@ public class loadProfile extends ListActivity {
                     }
 
                     //For testing with butteredToast
-                    //poopString = name + mpg;
+                    //poopString = poopString + name + mpg + "\n";
 
                     //Add the name and mpg Strings to the HashMap
                     profileHash.put(TAG_NAME, name);
@@ -126,11 +126,14 @@ public class loadProfile extends ListActivity {
                     //Add HashMap to ArrayList
                     profileList.add(profileHash);
 
+                    //Clear HashMap for next entry
+                    profileHash = new HashMap<String, String>();
                     //Clear counter for next line
                     counter = 0;
+                    afterComma = false;
                     //Clear the name, mpg, and fuel Strings for use in next line
-                    name = null;
-                    mpg = null;
+                    name = "";
+                    mpg = "";
                     //fuel = null; //Will implement fuel type later
 
             }
@@ -140,13 +143,13 @@ public class loadProfile extends ListActivity {
 
         //*********FOR TESTING PURPOSES************
         //Toast butteredToast = null;
-        //butteredToast.makeText(getApplicationContext(), poopString, Toast.LENGTH_LONG).show();
+        //butteredToast.makeText(getApplicationContext(), profileList.toString(), Toast.LENGTH_LONG).show();
         //*****************************************
 
         //Display profileList into ListView
         ListAdapter adapter = new SimpleAdapter(loadProfile.this, profileList, R.layout.load_layout,
                 new String[]{TAG_NAME, TAG_MPG}, new int[]{R.id.nameLayout, R.id.mpgLayout});
-        setListAdapter(null); //Clear prior list adapters
+        //setListAdapter(null); //Clear prior list adapters
         setListAdapter(adapter);
 
         //File I/O cleanup
@@ -175,6 +178,7 @@ public class loadProfile extends ListActivity {
 
         //Delete Profiles.txt
         deleteFile(profileFileName);
+
         //Re-create a blank Profiles.txt
         FileOutputStream outputToFile = null;
         try {
@@ -183,6 +187,12 @@ public class loadProfile extends ListActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        try {
+            outputToFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         //Exit activity_load_profile
         loadProfileSelected(v);
 
