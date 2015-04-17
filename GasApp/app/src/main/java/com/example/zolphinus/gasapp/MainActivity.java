@@ -547,8 +547,8 @@ public class MainActivity extends ListActivity {
         JSONFail = false;
 
         new GetContacts().execute();
-        final TextView textViewToChange = (TextView) findViewById(R.id.vehicleTextView);
-        textViewToChange.setText(testError);
+        //final TextView textViewToChange = (TextView) findViewById(R.id.vehicleTextView);
+        //textViewToChange.setText(testError);
     }
 
     double getValue(String distance, String price){
