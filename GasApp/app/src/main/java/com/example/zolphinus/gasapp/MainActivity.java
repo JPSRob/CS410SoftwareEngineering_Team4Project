@@ -210,7 +210,7 @@ public class MainActivity extends ListActivity {
     
     
     //button click for the Generate Button
-    public void generateClick(View v){
+    public void generateClick(View v) {
 
         /*
         switch (v.getId()) {
@@ -221,18 +221,24 @@ public class MainActivity extends ListActivity {
         */
 
 
+        //test for empty MPG edit text
+        EditText editText = (EditText) findViewById(R.id.mpgEditText);
+        RadioButton valueButton = (RadioButton) findViewById(R.id.valueRadioButton);
+        RadioButton priceButton = (RadioButton) findViewById(R.id.priceRadioButton);
+        RadioButton distanceButton = (RadioButton) findViewById(R.id.distanceRadioButton);
 
-    //test for empty MPG edit text
-    EditText editText = (EditText) findViewById(R.id.mpgEditText);
-
-    if( TextUtils.isEmpty(editText.getText())){
-        Toast.makeText(getApplicationContext(), "Please enter MPG.", Toast.LENGTH_LONG).show();
-    }else {
-        mpgValue = Double.parseDouble(editText.getText().toString());
-        makeJSONCall();
+        if (valueButton.isChecked()) {
+            if (TextUtils.isEmpty(editText.getText())) {
+                Toast.makeText(getApplicationContext(), "Please enter MPG.", Toast.LENGTH_LONG).show();
+            } else {
+                mpgValue = Double.parseDouble(editText.getText().toString());
+                makeJSONCall();
+            }
+        }else if(distanceButton.isChecked() || priceButton.isChecked()){
+            mpgValue = 0.0;
+            makeJSONCall();
+        }
     }
-    }
-
     private Runnable jsonRunnable = new Runnable()
     {
         @Override
