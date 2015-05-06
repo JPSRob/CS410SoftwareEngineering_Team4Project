@@ -12,8 +12,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
@@ -35,6 +37,10 @@ public class loadProfile extends ListActivity {
     private static String profileFileName = "Profiles.txt"; //Internal file name
     FileInputStream readInFile = null;
 
+    private static String defaultProfileFileName = "Default.txt"; //Internal file to hold default profile
+    String defaultName = null;
+    String defaultMPG = null;
+
     //ArrayList<HashMap to hold profile entries for ListView GUI
     ArrayList<HashMap<String, String>> profileList = new ArrayList<HashMap<String, String>>();
     //Const String keys for HashMap
@@ -55,17 +61,32 @@ public class loadProfile extends ListActivity {
         //Call function to read internal file and display to ListView
         updateListView();
 
+        //Code for ListView OnItemClickListener which will listen for user's clicks on the ListView items
+        ListView listview = getListView();
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            //@Override
+            public void onItemClick(AdapterView <?>adapter,View v, int position, long id){
+
+                defaultName = profileList.get(position).get(TAG_NAME);
+                defaultMPG = profileList.get(position).get(TAG_MPG);
+
+                //Test for onItemClick functionality - Will display contents of item clicked by user
+                Toast garlicToast = null;
+                garlicToast.makeText(getApplicationContext(), ("Selected: " + defaultName + ", " + defaultMPG
+                + "MPG"), Toast.LENGTH_LONG).show();
+
+            }
+        });
+
     }
 
     public void updateListView(){
 
         //Variables & declarations
-        int intToCast = 0;
         int counter = 0;
-        int counterDelimiter = 0;
         char tempChar;
         String tempString = "";
-        Boolean endOfFile = false;
         Boolean afterComma = false;
         String name = "", mpg = "", fuel = ""; //HashMap id values
         HashMap<String, String> profileHash = new HashMap<String, String>();
@@ -180,13 +201,16 @@ public class loadProfile extends ListActivity {
 
     }
 
-    //Method to delete contents of Profiles.txt
+
+
+    //Method to delete contents of Profiles.txt and Default.txt
     public void clearFile(View v){
 
-        //Delete Profiles.txt
+        //Delete Profiles.txt and Default.txt
         deleteFile(profileFileName);
+        deleteFile(defaultProfileFileName);
 
-        //Re-create a blank Profiles.txt
+        //Initialize a new Profiles.txt
         FileOutputStream outputToFile = null;
         try {
             outputToFile = openFileOutput(profileFileName ,Context.MODE_APPEND);
@@ -199,17 +223,77 @@ public class loadProfile extends ListActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //Initialize a new Default.txt
+        FileOutputStream outputToDefaultFile = null;
+        try {
+            outputToDefaultFile = openFileOutput(defaultProfileFileName , Context.MODE_APPEND);
+            //FOR TESTING: Displays Toast if initializing file is successful
+            //Toast garlicToast = null;
+            //garlicToast.makeText(getApplicationContext(), ("successfully opened Default.txt"), Toast.LENGTH_LONG).show();
 
-        //Exit activity_load_profile
-        loadProfileSelected(v);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            outputToDefaultFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //Return to activity_main and close this activity
+        setContentView(R.layout.activity_main);
+        this.finish();
 
     }
 
-
+    //Method that is called when user clicks "Load Profile" button
     public void loadProfileSelected(View v){
 
-        setContentView(R.layout.activity_main);
-        this.finish();
+        //If user has selected an item in the ListView, save to default.txt
+        if(defaultName != null && defaultMPG != null){
+
+            //String we will write to Default.txt
+            String defaults = (defaultName + "," + defaultMPG);
+
+            //Clear file of any contents before writing new data
+            deleteFile(defaultProfileFileName);
+
+            //Open file to write to
+            FileOutputStream outputToFile = null;
+            try {
+                //MODE_APPEND will add to end of file, instead of overwriting the file
+                outputToFile = openFileOutput(defaultProfileFileName, Context.MODE_PRIVATE);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            //Write to file
+            if (outputToFile != null) {
+                try {
+                    outputToFile.write(defaults.getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //Close the file
+            try {
+                outputToFile.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //Return to activity_main and close this activity
+            setContentView(R.layout.activity_main);
+            this.finish();
+
+        }
+        //Else if user has not selected a ListView item, toast an error message.
+        else{
+
+            Toast toasty = null;
+            toasty.makeText(getApplicationContext(), "No profile selected!", Toast.LENGTH_LONG).show();
+
+        }
         
     }
 

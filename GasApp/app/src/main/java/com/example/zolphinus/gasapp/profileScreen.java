@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.FileInputStream;
@@ -33,24 +34,25 @@ public class profileScreen extends Activity {
     }
 
     public void saveProfile(View v){
-        //startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
-        //For testing with Toast
-        //String testReadText = "";
-
-        //We will concatenate contents of profileNameTextEdit and MPGTextEdit with a ",' delimiter
+        //We will concatenate contents of profileNameTextEdit, MPGTextEdit, and fuelSpinner with a ",' delimiter
         EditText myProfileEdit = (EditText)findViewById(R.id.profileNameTextEdit);
         EditText myMPGEdit = (EditText)findViewById(R.id.MPGTextEdit);
+        //Spinner fuelSpinner = (Spinner) findViewById(R.id.fuelSpinner); //Will implement fuel in the future
+
+        //Prevent user from entering an empty field
         if (myProfileEdit.getText().toString().length() == 0 || myMPGEdit.getText().toString().length() == 0) {
 
             Toast.makeText(getApplicationContext(), "You left a field empty!", Toast.LENGTH_LONG).show();
 
         }
+        //If no fields empty, save to file
         else {
 
             //Grab Profile Name and MPG from EditTexts in GUI
-            profileInfo = (myProfileEdit.getText().toString()) + "," + (myMPGEdit.getText().toString() + "\n");
+            profileInfo = ((myProfileEdit.getText().toString()) + "," + (myMPGEdit.getText().toString()) + "\n");
 
+            //Open file to write to
             FileOutputStream outputToFile = null;
             try {
                 //MODE_APPEND will add to end of file, instead of overwriting the file
@@ -59,6 +61,7 @@ public class profileScreen extends Activity {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+            //Write to file
             if (outputToFile != null) {
                 try {
                     outputToFile.write(profileInfo.getBytes());
@@ -74,42 +77,9 @@ public class profileScreen extends Activity {
                 e.printStackTrace();
             }
 
-
-            FileInputStream readFile = null;
-            try {
-                readFile = openFileInput(profileFileName);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            byte[] input = new byte[0];
-            try {
-                input = new byte[readFile.available()];
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                while (readFile.read(input) != -1) {
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            //For testing with Toast
-            //testReadText += new String(input);
-
-            //Close the file
-            try {
-                readFile.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-            //For testing: toast message of file contents
-            //*******************************************************************************
-            //Toast.makeText(getApplicationContext(), testReadText, Toast.LENGTH_LONG).show();
-            //*******************************************************************************
+            //******UNCOMMENT FOR TEST TOAST**********
+            //testToast();
+            //****************************************
 
             //Set view back to activity_main, then close this activity
             setContentView(R.layout.activity_main);
@@ -117,8 +87,49 @@ public class profileScreen extends Activity {
 
         }
 
-        //setContentView(R.layout.activity_main);
-        //this.finish();
+    }
+
+    //Test function to read from file and display contents in a Toast
+    private void testToast(){
+
+        String testReadText = "";
+
+        //Read file to be displayed with a Toast
+        FileInputStream readFile = null;
+        try {
+            readFile = openFileInput(profileFileName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        byte[] input = new byte[0];
+        try {
+            input = new byte[readFile.available()];
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            while (readFile.read(input) != -1) {
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //Save contents to String
+        testReadText += new String(input);
+
+        //Close the file
+        try {
+            readFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //Toast message of file contents saved to testReadText
+        //*******************************************************************************
+        Toast.makeText(getApplicationContext(), testReadText, Toast.LENGTH_LONG).show();
+        //*******************************************************************************
+
     }
 
 

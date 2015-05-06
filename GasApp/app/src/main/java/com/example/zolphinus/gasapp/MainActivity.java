@@ -2,6 +2,7 @@ package com.example.zolphinus.gasapp;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,6 +29,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -127,8 +134,12 @@ public class MainActivity extends ListActivity {
 
     ArrayList<Map<String, String>> stationList;
 
-
-
+    //Internal file that holds default profile info
+    private static String profileFileName = "Profiles.txt";
+    private static String defaultProfileFileName = "Default.txt";
+    //Strings for default profile data
+    String defaultName = "";
+    String defaultMPG = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +153,13 @@ public class MainActivity extends ListActivity {
         startActivity(new Intent(getApplicationContext(), SplashScreen.class));
         setContentView(R.layout.activity_main);
 
+        //Initialize text files, if they do not exist
+        initializeTextFiles();
+
+        //Check to see if a default profile has been set. If so, fill in defaultName and defaultMPG.
+        readDefaultsFile();
+        //If defaults exist, update EditText fields with proper data.
+        setEditTextDefaults();
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
@@ -153,6 +171,130 @@ public class MainActivity extends ListActivity {
         //Load Message additions/*****************************************/ //Load Message additions
         generateButton = (Button) findViewById(R.id.generateButton);
         progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
+    }
+
+    public void initializeTextFiles(){
+
+        //Initialize Profiles.txt
+        FileOutputStream outputToProfileFile = null;
+        try {
+            outputToProfileFile = openFileOutput(profileFileName , Context.MODE_APPEND);
+            //FOR TESTING: Displays Toast if initializing file is successful
+            //Toast garlicToast = null;
+            //garlicToast.makeText(getApplicationContext(), ("successfully opened Profiles.txt"), Toast.LENGTH_LONG).show();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            outputToProfileFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //Initialize Default.txt
+        FileOutputStream outputToDefaultFile = null;
+        try {
+            outputToDefaultFile = openFileOutput(defaultProfileFileName , Context.MODE_APPEND);
+            //FOR TESTING: Displays Toast if initializing file is successful
+            //Toast garlicToast = null;
+            //garlicToast.makeText(getApplicationContext(), ("successfully opened Default.txt"), Toast.LENGTH_LONG).show();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            outputToDefaultFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void readDefaultsFile(){
+
+        //Variables
+        String tempString = "";
+        int counter = 0;
+        char tempChar;
+        Boolean afterComma = false;
+        defaultName = "";
+        defaultMPG = "";
+
+        //BufferedReader(InputStreamReader(InputStream)) method of opening Profiles.txt file
+        InputStream inStream = null;
+        InputStreamReader inReader = null;
+        BufferedReader buffReader = null;
+
+        //Open file
+        try {
+            inStream = openFileInput(defaultProfileFileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //While the file is not empty/missing, initialize InputStreamReader with file
+        if(inStream != null) {
+            inReader = new InputStreamReader(inStream);
+            //testString = "not null"; //FOR TESTING: used to test w/Toast if file is not null
+        }
+        //Initialize BufferedReader with our InputStreamReader - this interface will read from the file
+        buffReader = new BufferedReader(inReader);
+
+        //File parsing logic
+        try {
+            //Grab the line from Default.txt
+            if((tempString = buffReader.readLine()) != null) {
+
+                //While loop that will parse the current line
+                while (counter < tempString.length()) {
+
+                    //Grab the current substring character from the line
+                    tempChar = tempString.charAt(counter);
+
+                    //If character is a comma, ignore this delimiter and change afterComma to true to indicate we're now reading into mpg field
+                    if (tempChar == ',') {
+                        afterComma = true;
+                        counter++;
+                    } else {
+                        //if we have not hit the comma delimiter in the line, read into name field
+                        if (!afterComma) {
+                            defaultName = defaultName + tempChar;
+                            counter++;
+                        }
+                        //if we have already hit the comma delimiter, read into mpg field
+                        else if (afterComma) {
+                            defaultMPG = defaultMPG + tempChar;
+                            counter++;
+                        }
+                    }
+                }
+
+                //Clear counter and afterComma
+                counter = 0;
+                afterComma = false;
+
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void setEditTextDefaults(){
+
+
+            //Fetch Profile Name and MPG text field objects
+            TextView profileName_TextView = (TextView) findViewById(R.id.selectedProfileTextView);
+            EditText mpg_EditText = (EditText) findViewById(R.id.mpgEditText);
+
+            //Clear, then set text within Profile Name and MPG text field objects with default profile info
+            profileName_TextView.setText("");
+            mpg_EditText.setText("", TextView.BufferType.EDITABLE);
+            profileName_TextView.setText(defaultName);
+            mpg_EditText.setText(defaultMPG, TextView.BufferType.EDITABLE);
+
+
     }
 
     //Load Message additions
@@ -204,9 +346,21 @@ public class MainActivity extends ListActivity {
     public void loadProfileClick(View v){
         //Intent intent =  new Intent(this, loadProfile.class);
         startActivity( new Intent(getApplicationContext(), loadProfile.class));
-        
+
+
+
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        //Re-check for default profile:
+        //Check to see if a default profile has been set. If so, fill in defaultName and defaultMPG.
+        readDefaultsFile();
+        //If defaults exist, update EditText fields with proper data.
+        setEditTextDefaults();
+    }
     
     
     //button click for the Generate Button

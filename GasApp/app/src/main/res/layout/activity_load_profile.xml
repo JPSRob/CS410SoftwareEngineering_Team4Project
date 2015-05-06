@@ -43,7 +43,7 @@
         android:layout_below="@+id/textView2"
         android:layout_alignWithParentIfMissing="true"
         android:layout_alignBaseline="@+id/textView2"
-        android:choiceMode="multipleChoice"
+        android:choiceMode="singleChoice"
         android:clickable="true"
         android:fastScrollAlwaysVisible="false"
         android:nestedScrollingEnabled="false"
